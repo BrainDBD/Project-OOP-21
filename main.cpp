@@ -21,6 +21,7 @@ private:
     std::vector<Card> cards;
 public:
     Deck();
+    Deck(vector<Card> cards_): cards{cards_}{}
     void shuffle(){};
     ~Deck() = default;
 };
@@ -28,11 +29,12 @@ public:
 class TrumpCard{
 
 };
-class TrumpDeck: public Deck{
+class TrumpDeck{
 private:
     std::vector<TrumpCard> tcards;
 public:
     TrumpDeck();
+    TrumpDeck(vector<TrumpCard> tcards_): tcards{tcards_}{}
     ~TrumpDeck() = default;
 };
 int main()
