@@ -44,14 +44,14 @@ public:
     {
         if (!cards.empty())
         {
-            Card dealtcard = cards.back(); //pretend that the deck is bottom-up
+            Card dealtcard = cards.back(); // pretend that the deck is bottom-up
             cards.pop_back();
             return dealtcard;
         }
         else
         {
             Card errorcard{12};
-            return errorcard; //will serve as a tell that the deck is empty
+            return errorcard; // will serve as a tell that the deck is empty
         }
     }
     ~Deck() = default;
@@ -113,7 +113,6 @@ private:
     int hp;
 
 public:
-
     Player &operator=(const Player &other)
     {
         if (this != &other)
