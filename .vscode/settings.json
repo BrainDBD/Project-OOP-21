@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.cpp": "C++",
+        "*.sql": "Oracle-SQL and PSQL",
+        "iosfwd": "cpp",
+        "iostream": "cpp"
+    }
+}
