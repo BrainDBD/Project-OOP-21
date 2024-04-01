@@ -1,4 +1,4 @@
-# Proiect POO: Modified Game of 21/Blackjack
+# Proiect POO: Game of 21/Blackjack
 
 Mi-am propus pentru acest proiect să realizez un program bazat pe o versiune personalizată a jocului de cărți "21" sau "Black Jack", în care jucătorii trag cărți, încercând să ajungă la o sumă cât mai aproape de 21 fără să depășească valoarea.
 
