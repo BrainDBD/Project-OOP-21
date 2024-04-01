@@ -40,6 +40,20 @@ public:
         std::mt19937 g(rd());
         shuffle(cards.begin(), cards.end(), g);
     }
+    Card dealCard()
+    {
+        if (!cards.empty())
+        {
+            Card dealtcard = cards.back(); //pretend that the deck is bottom-up
+            cards.pop_back();
+            return dealtcard;
+        }
+        else
+        {
+            Card errorcard{12};
+            return errorcard; //will serve as a tell that the deck is empty
+        }
+    }
     ~Deck() = default;
     friend std::ostream &operator<<(std::ostream &os, const Deck &deck)
     {
@@ -99,7 +113,6 @@ private:
     int hp;
 
 public:
-    explicit Player(std::string initial_name = "Lucas", int initial_score = 0, int player_hp = 5) : name(std::move(initial_name)), score(initial_score), hp(player_hp) {}
 
     Player &operator=(const Player &other)
     {
@@ -129,5 +142,7 @@ int main()
         deck1.addToDeck(vcard[i]);
     deck1.shuffleDeck();
     std::cout << deck1;
+    std::cout << '\n'
+              << deck1.dealCard();
     return 0;
 }
