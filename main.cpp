@@ -59,6 +59,7 @@ public:
     {
         for (unsigned int i = 0; i < deck.cards.size(); i++)
             std::cout << deck.cards[i] << " ";
+        std::cout<<'\n';
         return os;
     }
     Deck &operator=(const Deck &other)
@@ -111,8 +112,10 @@ private:
     std::string name;
     int score;
     int hp;
+    Deck hand;
 
 public:
+    Player(std::string name_ = "", int score_ = -99, int hp_=-1,Deck hand_={}) : name{name_}, score{score_}, hp{hp_}, hand(hand_) {}
     Player &operator=(const Player &other)
     {
         if (this != &other)
@@ -123,25 +126,31 @@ public:
         }
         return *this;
     }
+    void addToHand(Card card_)
+    {
+        hand.addToDeck(card_);
+    }
     friend std::ostream &operator<<(std::ostream &os, const Player &player)
     {
-        os << "Name: " << player.name << std::endl;
-        os << "Score: " << player.score << std::endl;
-        os << "Health: " << player.hp << std::endl;
+        os << "Name: " << player.name << '\n';
+        os << "Score: " << player.score << '\n';
+        os << "Health: " << player.hp << '\n';
+        os << "Hand: "<<player.hand<<'\n';
         return os;
     }
 
-    ~Player();
 };
 int main()
 {
-    Card vcard[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    Card vcard[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     Deck deck1;
-    for (int i = 0; i < 11; i++)
+    for (int i = 0; i < 10; i++)
         deck1.addToDeck(vcard[i]);
     deck1.shuffleDeck();
     std::cout << deck1;
-    std::cout << '\n'
-              << deck1.dealCard();
+    Player jucator1{"Ioan",100,5,deck1};
+    Card card2={11};
+    jucator1.addToHand(card2);
+    std::cout<<jucator1;
     return 0;
 }
