@@ -29,10 +29,7 @@ private:
     std::vector<Card> cards;
 
 public:
-    void addToDeck(Card card_)
-    {
-        cards.push_back(card_);
-    }
+    void addToDeck(Card card_) { cards.push_back(card_); }
     /*Deck(vector<Card> cards_): cards{cards_}{}*/
     void shuffleDeck()
     {
@@ -54,12 +51,11 @@ public:
             return errorcard; // will serve as a tell that the deck is empty
         }
     }
-    ~Deck() = default;
     friend std::ostream &operator<<(std::ostream &os, const Deck &deck)
     {
         for (unsigned int i = 0; i < deck.cards.size(); i++)
             std::cout << deck.cards[i] << " ";
-        std::cout<<'\n';
+        std::cout << '\n';
         return os;
     }
     Deck &operator=(const Deck &other)
@@ -68,6 +64,7 @@ public:
             cards[i] = other.cards[i];
         return *this;
     }
+    ~Deck() = default;
 };
 
 class TrumpCard
@@ -115,7 +112,7 @@ private:
     Deck hand;
 
 public:
-    Player(std::string name_ = "", int score_ = -99, int hp_=-1,Deck hand_={}) : name{name_}, score{score_}, hp{hp_}, hand(hand_) {}
+    Player(std::string name_ = "", int score_ = -99, int hp_ = -1, Deck hand_ = {}) : name{name_}, score{score_}, hp{hp_}, hand(hand_) {}
     Player &operator=(const Player &other)
     {
         if (this != &other)
@@ -123,22 +120,24 @@ public:
             name = other.name;
             score = other.score;
             hp = other.hp;
+            hand = other.hand;
         }
         return *this;
     }
-    void addToHand(Card card_)
-    {
-        hand.addToDeck(card_);
-    }
+    std::string getName() const { return name; }
+    int getScore() const { return score; }
+    int getHealth() const { return hp; }
+    void addToHand(Card card_) { hand.addToDeck(card_); }
+    void showHand() { std::cout << hand << '\n'; }
     friend std::ostream &operator<<(std::ostream &os, const Player &player)
     {
         os << "Name: " << player.name << '\n';
         os << "Score: " << player.score << '\n';
         os << "Health: " << player.hp << '\n';
-        os << "Hand: "<<player.hand<<'\n';
+        os << "Hand: " << player.hand << '\n';
         return os;
     }
-
+    ~Player() = default;
 };
 int main()
 {
@@ -148,9 +147,9 @@ int main()
         deck1.addToDeck(vcard[i]);
     deck1.shuffleDeck();
     std::cout << deck1;
-    Player jucator1{"Ioan",100,5,deck1};
-    Card card2={11};
+    Player jucator1{"Ioan", 100, 5, deck1};
+    Card card2 = {11};
     jucator1.addToHand(card2);
-    std::cout<<jucator1;
+    jucator1.showHand();
     return 0;
 }
