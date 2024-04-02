@@ -10,16 +10,17 @@ private:
 public:
     Card();
     Card(const int rank_) : rank{rank_} {}
+    Card(const Card &other) : rank{other.rank} {}
     int getValue() const { return rank; }
-    friend std::ostream &operator<<(std::ostream &os, const Card &card)
-    {
-        os << card.rank << " ";
-        return os;
-    }
     Card &operator=(const Card &other)
     {
         rank = other.rank;
         return *this;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const Card &card)
+    {
+        os << card.rank << " ";
+        return os;
     }
     ~Card() = default;
 };
@@ -66,18 +67,23 @@ public:
             return errorcard; // will serve as a tell that the deck is empty
         }
     }
-    friend std::ostream &operator<<(std::ostream &os, const Deck &deck)
+    Card lastCard()
     {
-        for (unsigned int i = 0; i < deck.cards.size(); i++)
-            std::cout << deck.cards[i] << " ";
-        std::cout << '\n';
-        return os;
+        Card lastcard =cards.back();
+        return lastcard;
     }
     Deck &operator=(const Deck &other)
     {
         for (unsigned int i = 0; i < other.cards.size(); i++)
             cards[i] = other.cards[i];
         return *this;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const Deck &deck)
+    {
+        for (unsigned int i = 0; i < deck.cards.size(); i++)
+            std::cout << deck.cards[i] << " ";
+        std::cout << '\n';
+        return os;
     }
     ~Deck() = default;
 };
@@ -89,16 +95,17 @@ private:
 public:
     TrumpCard();
     TrumpCard(const int type_) : type{type_} {}
+    TrumpCard(const TrumpCard &other) : type{other.type} {}
     int getValue() const { return type; }
-    friend std::ostream &operator<<(std::ostream &os, const TrumpCard &card)
-    {
-        os << card.type << " ";
-        return os;
-    }
     TrumpCard &operator=(const TrumpCard &other)
     {
         type = other.type;
         return *this;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const TrumpCard &tcard)
+    {
+        os << tcard.type << " ";
+        return os;
     }
     ~TrumpCard() = default;
 };
@@ -121,8 +128,7 @@ public:
     void clearHand() { hand.emptyDeck(); }
     void resetScore() { score = 0; }
     void addtoScore(int add) { score = score + add; }
-    void lowerHealth() { hp = hp - 1; }
-    void damageHealth(int betsy) { hp = hp - betsy; }
+    void lowerHealth(int betsy) { hp = hp - betsy; }
     Player &operator=(const Player &other)
     {
         if (this != &other)
@@ -152,10 +158,12 @@ private:
 
 public:
     Game(std::vector<Player> &players_, Deck maindeck_) : players{players_}, maindeck{maindeck_} {}
+    Game(const Game &other):players{other.players},maindeck{other.maindeck}{};
     void Match()
     {
         bool gaming = true;
         int round = 1;
+        int bet = 1;
         while (gaming && (players[0].getHealth() > 0 && players[1].getHealth() > 0))
         {
             std::cout << "\n\n"
@@ -182,9 +190,9 @@ public:
                 if (choice == 2)
                 {
                     std::cout << '\n'
-                              << "Your current hand: ";
+                              << players[0].getName()<<"'s current hand: ";
                     players[0].showHand();
-                    std::cout << "Opponent's current hand: ";
+                    std::cout << players[1].getName()<<"'s current hand: ";
                     players[1].showHand();
                     std::cout << "\n\n";
                     std::cout << "Available actions: Stay[0], Hit[1]"
@@ -231,10 +239,11 @@ public:
                 if (choice == 2)
                 {
                     std::cout << '\n'
-                              << "Your current hand: ";
+                              << players[1].getName()<<"'s current hand: ";
                     players[1].showHand();
-                    std::cout << "Opponent's current hand: ";
+                    std::cout << players[0].getName()<<"'s current hand: ";
                     players[0].showHand();
+                    std::cout << "\n\n";
                     std::cout << "Available actions: Stay[0], Hit[1]"
                               << "\n\n";
                     std::cin >> choice;
@@ -279,19 +288,19 @@ public:
             {
                 std::cout << players[0].getName() << " wins this round!"
                           << "\n\n";
-                players[1].lowerHealth();
+                players[1].lowerHealth(bet);
             }
             else if (s2 > target && s1 <= target)
             {
                 std::cout << players[0].getName() << " wins this round!"
                           << "\n\n";
-                players[1].lowerHealth();
+                players[1].lowerHealth(bet);
             }
             else if (s2 > target && s1 > target && s1 < s2)
             {
                 std::cout << players[0].getName() << " wins this round!"
                           << "\n\n";
-                players[1].lowerHealth();
+                players[1].lowerHealth(bet);
             }
             else if (s1 == s2)
             {
@@ -302,7 +311,7 @@ public:
             {
                 std::cout << players[1].getName() << " wins this round!"
                           << "\n\n";
-                players[0].lowerHealth();
+                players[0].lowerHealth(bet);
             }
             if (players[0].getHealth() * players[1].getHealth() > 0)
             {
@@ -323,6 +332,22 @@ public:
             std::cout << "It's a tie!"
                       << "\n\n";
     }
+    Game &operator=(const Game &other)
+    {
+        if (this != &other)
+        {
+            players = other.players;
+            maindeck = other.maindeck;
+        }
+        return *this;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const Game &game)
+    {
+        for (unsigned int i = 0; i < game.players.size(); i++)
+            std::cout << game.players[i] << " ";
+        std::cout << '\n';
+        return os;
+    }
     ~Game() = default;
 };
 
@@ -341,11 +366,32 @@ int main()
         std::cout << "Player " << i << " what is your name?" << '\n';
         std::string nume;
         std::cin >> nume;
-        Player jucatornou{nume, 0, 1, deck1};
+        Player jucatornou{nume, 0, 5, deck1};
         jucatori.push_back(jucatornou);
     }
     Game joc1 = {jucatori, deck1};
     joc1.Match();
 
+    /*Deck deck1,deck2;
+    deck1.createDeck(deck1);
+    deck2.createDeck(deck2);
+    deck1.shuffleDeck();
+    deck2.shuffleDeck();
+    std::cout<<deck1<<'\n'<<deck2<<'\n';
+    Player jucatornou{"Joe", 10, 5, deck1};
+    Player jucatornou2{"Bill", 0, 5, deck2};
+    jucatornou.swapHand(jucatornou2);
+    jucatornou.showHand();
+    /*
+    Card vcard[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    Deck deck1;
+    for (int i = 0; i < 10; i++)
+        deck1.addToDeck(vcard[i]);
+    deck1.shuffleDeck();
+    std::cout << deck1;
+    Player jucator1{"Ioan", 100, 5, deck1};
+    Card card2 = {11};
+    jucator1.addToHand(card2);
+    std::cout<<jucator1;*/
     return 0;
 }
