@@ -81,42 +81,26 @@ public:
     }
     ~Deck() = default;
 };
-
 class TrumpCard
 {
 private:
-    std::string type;
-};
-class TrumpDeck
-{
-private:
-    std::vector<TrumpCard> tcards;
+    int type;
 
 public:
-    void addToDeck(TrumpCard tcard_)
+    TrumpCard();
+    TrumpCard(const int type_) : type{type_} {}
+    int getValue() const { return type; }
+    friend std::ostream &operator<<(std::ostream &os, const TrumpCard &card)
     {
-        tcards.push_back(tcard_);
-    }
-    /*Deck(vector<Card> cards_): cards{cards_}{}*/
-    void shuffleTrumpDeck()
-    {
-        std::random_device rd;
-        std::mt19937 g(rd());
-        shuffle(tcards.begin(), tcards.end(), g);
-    }
-    ~TrumpDeck() = default;
-    /*friend std::ostream &operator<<(std::ostream &os, const TrumpDeck &tdeck)
-    {
-        for (unsigned int i = 0; i < tdeck.tcards.size(); i++)
-            std::cout << tdeck.tcards[i] << " ";
+        os << card.type << " ";
         return os;
-    }*/
-    TrumpDeck &operator=(const TrumpDeck &other)
+    }
+    TrumpCard &operator=(const TrumpCard &other)
     {
-        for (unsigned int i = 0; i < other.tcards.size(); i++)
-            tcards[i] = other.tcards[i];
+        type = other.type;
         return *this;
     }
+    ~TrumpCard() = default;
 };
 class Player
 {
@@ -133,11 +117,12 @@ public:
     int getScore() const { return score; }
     int getHealth() const { return hp; }
     void addToHand(Card card_) { hand.addToDeck(card_); }
-    void showHand() { std::cout << hand<<" "; }
+    void showHand() { std::cout << hand; }
     void clearHand() { hand.emptyDeck(); }
     void resetScore() { score = 0; }
     void addtoScore(int add) { score = score + add; }
     void lowerHealth() { hp = hp - 1; }
+    void damageHealth(int betsy) { hp = hp - betsy; }
     Player &operator=(const Player &other)
     {
         if (this != &other)
@@ -159,147 +144,188 @@ public:
     }
     ~Player() = default;
 };
-
-void GameOn(std::vector<Player> players)
+class Game
 {
-    bool gaming = true;
-    int round = 1;
-    while (gaming && (players[0].getHealth() > 0 && players[1].getHealth() > 0))
+private:
+    std::vector<Player> players;
+    Deck maindeck;
+
+public:
+    Game(std::vector<Player> &players_, Deck maindeck_) : players{players_}, maindeck{maindeck_} {}
+    void Match()
     {
-        std::cout << "\n\n"<< "Incepe runda " << round << "\n\n";
-        players[0].clearHand();
-        players[0].resetScore();
-        players[1].clearHand();
-        players[1].resetScore();
-        Deck rounddeck;
-        rounddeck.createDeck(rounddeck);
-        rounddeck.shuffleDeck();
-        int staying = 0;
-        int choice;
-        while (staying < 2)
+        bool gaming = true;
+        int round = 1;
+        while (gaming && (players[0].getHealth() > 0 && players[1].getHealth() > 0))
         {
-            std::cout << players[0].getName() << ", it's your turn." << "\n\n";
-            std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2]"<<"\n\n";
-            std::cin >> choice;
-            if (choice == 2)
+            std::cout << "\n\n"
+                      << "Round " << round << " begins."
+                      << "\n";
+            std::cout << players[0].getName() << " has " << players[0].getHealth() << " health." << '\n';
+            std::cout << players[1].getName() << " has " << players[1].getHealth() << " health." << '\n';
+            players[0].clearHand();
+            players[0].resetScore();
+            players[1].clearHand();
+            players[1].resetScore();
+            Deck rounddeck = maindeck;
+            rounddeck.shuffleDeck();
+            int staying = 0;
+            int choice;
+            int target = 21;
+            while (staying < 2)
             {
-                std::cout<<'\n'<<"Your current hand: ";
-                players[0].showHand();
-                std::cout<<"Opponent's current hand: ";
-                players[1].showHand();
-                std::cout << "Available actions: Stay[0], Hit[1]"<<"\n\n";
-                std::cin>>choice;
-                std::cout<<'\n';
-            }
-            if (choice == 1)
-            {
-                Card hitcard = rounddeck.dealCard();
-                if (hitcard.getValue() == 12)
+                std::cout << players[0].getName() << ", it's your turn."
+                          << "\n\n";
+                std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2]"
+                          << "\n\n";
+                std::cin >> choice;
+                if (choice == 2)
                 {
-                    std::cout << "No more cards in the deck!" << "\n\n";
+                    std::cout << '\n'
+                              << "Your current hand: ";
+                    players[0].showHand();
+                    std::cout << "Opponent's current hand: ";
+                    players[1].showHand();
+                    std::cout << "\n\n";
+                    std::cout << "Available actions: Stay[0], Hit[1]"
+                              << "\n\n";
+                    std::cin >> choice;
+                    std::cout << '\n';
+                }
+                if (choice == 1)
+                {
+                    Card hitcard = rounddeck.dealCard();
+                    if (hitcard.getValue() == 12)
+                    {
+                        std::cout << "No more cards in the deck!"
+                                  << "\n\n";
+                        if (staying < 2)
+                            staying++;
+                    }
+                    else
+                    {
+                        players[0].addToHand(hitcard);
+                        players[0].addtoScore(hitcard.getValue());
+                        std::cout << players[0].getName() << ", you drew the " << hitcard.getValue() << " card."
+                                  << "\n\n";
+                        if (staying > 0)
+                            staying--;
+                    }
+                }
+                else if (choice == 0)
+                {
                     if (staying < 2)
                         staying++;
                 }
                 else
                 {
-                    players[0].addToHand(hitcard);
-                    players[0].addtoScore(hitcard.getValue());
-                    std::cout << players[0].getName() << ", you drew the " << hitcard.getValue() << " card." << "\n\n";
-                    if (staying > 0)
-                        staying--;
+                    gaming = false;
+                    break;
                 }
-            }
-            else if (choice == 0)
-            {
-                if (staying < 2)
-                    staying++;
-            }
-            else
-            {
-                gaming = false;
-                break;
-            }
-            std::cout << players[1].getName() << ", it's your turn." << "\n\n";
-            std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2]"<<"\n\n";
-            std::cin >> choice;
-            std::cout<<'\n';
-            if (choice == 2)
-            {
-                std::cout<<'\n'<<"Your current hand: ";
-                players[1].showHand();
-                std::cout<<"Opponent's current hand: ";
-                players[0].showHand();
-                std::cout << "Available actions: Stay[0], Hit[1]"<<"\n\n";
-                std::cin>>choice;
-            }
-            if (choice == 1)
-            {
-                Card hitcard = rounddeck.dealCard();
-                if (hitcard.getValue() == 12)
+                std::cout << players[1].getName() << ", it's your turn."
+                          << "\n\n";
+                std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2]"
+                          << "\n\n";
+                std::cin >> choice;
+                std::cout << '\n';
+                if (choice == 2)
                 {
-                    std::cout << "No more cards in the deck!" << "\n\n";
+                    std::cout << '\n'
+                              << "Your current hand: ";
+                    players[1].showHand();
+                    std::cout << "Opponent's current hand: ";
+                    players[0].showHand();
+                    std::cout << "Available actions: Stay[0], Hit[1]"
+                              << "\n\n";
+                    std::cin >> choice;
+                }
+                if (choice == 1)
+                {
+                    Card hitcard = rounddeck.dealCard();
+                    if (hitcard.getValue() == 12)
+                    {
+                        std::cout << "No more cards in the deck!"
+                                  << "\n\n";
+                        if (staying < 2)
+                            staying++;
+                    }
+                    else
+                    {
+                        players[1].addToHand(hitcard);
+                        players[1].addtoScore(hitcard.getValue());
+                        std::cout << players[1].getName() << ", you drew the " << hitcard.getValue() << " card."
+                                  << "\n\n";
+                        if (staying > 0)
+                            staying--;
+                    }
+                }
+                else if (choice == 0)
+                {
                     if (staying < 2)
                         staying++;
                 }
                 else
                 {
-                    players[1].addToHand(hitcard);
-                    players[1].addtoScore(hitcard.getValue());
-                    std::cout << players[1].getName() << ", you drew the " << hitcard.getValue() << " card." << "\n\n";
-                    if (staying > 0)
-                        staying--;
+                    gaming = false;
+                    break;
                 }
             }
-            else if (choice == 0)
+            int s1, s2;
+            s1 = players[0].getScore();
+            s2 = players[1].getScore();
+            std::cout << players[0].getName() << " has " << s1 << " total points, while " << players[1].getName() << " has " << s2 << " total points"
+                      << "\n\n";
+            if (s1 > s2 && s1 <= 21)
             {
-                if (staying < 2)
-                    staying++;
+                std::cout << players[0].getName() << " wins this round!"
+                          << "\n\n";
+                players[1].lowerHealth();
+            }
+            else if (s2 > target && s1 <= target)
+            {
+                std::cout << players[0].getName() << " wins this round!"
+                          << "\n\n";
+                players[1].lowerHealth();
+            }
+            else if (s2 > target && s1 > target && s1 < s2)
+            {
+                std::cout << players[0].getName() << " wins this round!"
+                          << "\n\n";
+                players[1].lowerHealth();
+            }
+            else if (s1 == s2)
+            {
+                std::cout << "It's a draw!"
+                          << "\n\n";
             }
             else
             {
-                gaming = false;
-                break;
+                std::cout << players[1].getName() << " wins this round!"
+                          << "\n\n";
+                players[0].lowerHealth();
             }
+            if (players[0].getHealth() * players[1].getHealth() > 0)
+            {
+                std::cout << "Continue? Yes[1], No[0] ";
+                std::cin >> choice;
+                if (choice == 0)
+                    gaming = 0;
+            }
+            round++;
         }
-        int s1, s2;
-        s1 = players[0].getScore();
-        s2 = players[1].getScore();
-        std::cout << players[0].getName() << " has " << s1 << " total points, while " << players[1].getName() << " has " << s2 << " total points" << "\n\n";
-        if (s1 > s2 && s1 <= 21)
-        {
-            std::cout << players[0].getName() << " wins this round!" << "\n\n";
-            players[1].lowerHealth();
-        }
-        else if (s2 > 21 && s1 <= 21)
-        {
-            std::cout << players[0].getName() << " wins this round!" << "\n\n";
-            players[1].lowerHealth();
-        }
-        else if (s2 > 21 && s1 > 21 && s1 < s2)
-        {
-            std::cout << players[0].getName() << " wins this round!" << "\n\n";
-            players[1].lowerHealth();
-        }
-        else if (s1 == s2)
-        {
-            std::cout << "It's a draw!" << "\n\n";
-        }
+        if (players[0].getHealth() > players[1].getHealth())
+            std::cout << players[0].getName() << " wins the match!"
+                      << "\n\n";
+        else if (players[0].getHealth() < players[1].getHealth())
+            std::cout << players[1].getName() << " wins the match!"
+                      << "\n\n";
         else
-        {
-            std::cout << players[1].getName() << " wins this round!" << "\n\n";
-            players[2].lowerHealth();
-        }
-        std::cout<<"Continue? Yes[1], No[0].";
-        std::cin>>choice;
-        if(choice==0)
-            gaming=0;
-        round++;
+            std::cout << "It's a tie!"
+                      << "\n\n";
     }
-    if (players[0].getHealth() < 1)
-        std::cout << players[1].getName() << " wins the match!" << "\n\n";
-    else
-        std::cout << players[0].getName() << " wins the match!" << "\n\n";
-}
+    ~Game() = default;
+};
+
 int main()
 {
     int n;
@@ -315,20 +341,11 @@ int main()
         std::cout << "Player " << i << " what is your name?" << '\n';
         std::string nume;
         std::cin >> nume;
-        Player jucatornou{nume, 0, 5, deck1};
+        Player jucatornou{nume, 0, 1, deck1};
         jucatori.push_back(jucatornou);
     }
-    GameOn(jucatori);
-    /*
-    Card vcard[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    Deck deck1;
-    for (int i = 0; i < 10; i++)
-        deck1.addToDeck(vcard[i]);
-    deck1.shuffleDeck();
-    std::cout << deck1;
-    Player jucator1{"Ioan", 100, 5, deck1};
-    Card card2 = {11};
-    jucator1.addToHand(card2);
-    std::cout<<jucator1;*/
+    Game joc1 = {jucatori, deck1};
+    joc1.Match();
+
     return 0;
 }
