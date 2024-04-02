@@ -29,8 +29,17 @@ private:
     std::vector<Card> cards;
 
 public:
+    Deck(const std::vector<Card> &cards_ = {}) : cards{cards_} {}
+    Deck(const Deck &other) : cards{other.cards} {}
     void addToDeck(Card card_) { cards.push_back(card_); }
-    /*Deck(vector<Card> cards_): cards{cards_}{}*/
+    void emptyDeck()
+    {
+        while (!cards.empty())
+        {
+            Card dealtcard = cards.back();
+            cards.pop_back();
+        }
+    }
     void shuffleDeck()
     {
         std::random_device rd;
@@ -83,7 +92,7 @@ public:
         tcards.push_back(tcard_);
     }
     /*Deck(vector<Card> cards_): cards{cards_}{}*/
-    void shuffleDeck()
+    void shuffleTrumpDeck()
     {
         std::random_device rd;
         std::mt19937 g(rd());
@@ -112,7 +121,17 @@ private:
     Deck hand;
 
 public:
-    Player(std::string name_ = "", int score_ = -99, int hp_ = -1, Deck hand_ = {}) : name{name_}, score{score_}, hp{hp_}, hand(hand_) {}
+    Player(std::string name_ = "", int score_ = -1, int hp_ = -1, Deck hand_ = {}) : name{name_}, score{score_}, hp{hp_}, hand(hand_) {}
+    Player(const Player &other) : name{other.name}, score{other.score}, hp{other.hp}, hand{other.hand} {}
+    std::string getName() const { return name; }
+    int getScore() const { return score; }
+    int getHealth() const { return hp; }
+    void addToHand(Card card_) { hand.addToDeck(card_); }
+    void showHand() { std::cout << hand << '\n'; }
+    void clearHand() { hand.emptyDeck(); }
+    void resetScore() { score = 0; }
+    void addtoScore(int add) { score = score + add; }
+    void lowerHealth() { hp = hp - 1; }
     Player &operator=(const Player &other)
     {
         if (this != &other)
@@ -124,11 +143,6 @@ public:
         }
         return *this;
     }
-    std::string getName() const { return name; }
-    int getScore() const { return score; }
-    int getHealth() const { return hp; }
-    void addToHand(Card card_) { hand.addToDeck(card_); }
-    void showHand() { std::cout << hand << '\n'; }
     friend std::ostream &operator<<(std::ostream &os, const Player &player)
     {
         os << "Name: " << player.name << '\n';
@@ -139,8 +153,128 @@ public:
     }
     ~Player() = default;
 };
+
+void GameOn(std::vector<Player> players)
+{
+    bool gaming = true;
+    int round = 1;
+    while (gaming && (players[0].getHealth()>0 && players[1].getHealth()>0))
+    {
+        std::cout << "Incepe runda " << round << '\n';
+        players[0].clearHand();
+        players[0].resetScore();
+        players[1].clearHand();
+        players[1].resetScore();
+        Card vcard[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        Deck rounddeck;
+        for (int i = 0; i < 11; i++)
+            rounddeck.addToDeck(vcard[i]);
+        rounddeck.shuffleDeck();
+        std::cout<<rounddeck<<'\n';
+        int staying = 0;
+        int choice;
+        while (staying < 2)
+        {
+            std::cout << players[0].getName()<<", hit(1) or stay(0)?" << '\n';
+            std::cin >> choice;
+            if (choice)
+            {
+                Card hitcard = rounddeck.dealCard();
+                if (hitcard.getValue() == 12)
+                {
+                    std::cout << "No more cards in the deck!" << '\n';
+                    if(staying>0)
+                        staying--;
+                }
+                else
+                {
+                    players[0].addToHand(hitcard);
+                    players[0].addtoScore(hitcard.getValue());
+                    std::cout<<players[0].getName()<<", you drew the "<< hitcard.getValue()<<" card. Now you have "<<players[0].getScore()<<" total points. "<<'\n';
+                    if(staying>0)
+                        staying--;
+                }
+            }
+            else if (staying < 2)
+                staying++;
+            std::cout << players[1].getName()<<", hit(1) or stay(0)?" << '\n';
+            std::cin >> choice;
+            if (choice)
+            {
+                Card hitcard = rounddeck.dealCard();
+                if (hitcard.getValue() == 12)
+                {
+                    std::cout << "No more cards in the deck!" << '\n';
+                    if(staying>0)
+                        staying--;
+                }
+                else
+                {
+                    players[1].addToHand(hitcard);
+                    players[1].addtoScore(hitcard.getValue());
+                    std::cout<<players[1].getName()<<", you drew the "<< hitcard.getValue()<<" card. Now you have "<<players[1].getScore()<<" total points. "<<'\n';
+                    if(staying>0)
+                        staying--;
+                }
+            }
+            else if (staying < 2)
+                staying++;
+        }
+        int s1, s2;
+        s1 = players[0].getScore();
+        s2 = players[1].getScore();
+        std::cout<<players[0].getName()<<" has "<<s1<<" total points, while "<<players[1].getName()<<" has "<<s2<<" total points"<<'\n';
+        if (s1 > s2 && s1 <= 21)
+        {
+            std::cout<<players[0].getName()<<" wins this round!"<<'\n';
+            players[1].lowerHealth();
+        }
+        else if(s2>21 && s1<=21)
+        {
+            std::cout<<players[0].getName()<<" wins this round!"<<'\n';
+            players[1].lowerHealth();
+        }
+        else if(s2>21 && s1>21 && s1<s2)
+        {
+            std::cout<<players[0].getName()<<" wins this round!"<<'\n';
+            players[1].lowerHealth();
+        }
+        else if(s1==s2)
+        {
+            std::cout<<"It's a draw!"<<'\n';
+        }
+        else
+        {
+            std::cout<<players[1].getName()<<" wins this round!"<<'\n';
+            players[2].lowerHealth();
+        }
+        round++;
+    }
+    if(players[0].getHealth()<1)
+        std::cout<<players[1].getName()<<" wins the match!"<<'\n';
+    else 
+        std::cout<<players[0].getName()<<" wins the match!"<<'\n';
+}
 int main()
 {
+    int n;
+    std::vector<Player> jucatori;
+    Card vcard[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    Deck deck1;
+    for (int i = 0; i < 11; i++)
+        deck1.addToDeck(vcard[i]);
+    deck1.shuffleDeck();
+    n = 2;
+    for (int i = 1; i <= n; i++)
+    {
+        std::cout << "Player " << i << " what is your name?" << '\n';
+        std::string nume;
+        std::cin >> nume;
+        Player jucatornou{nume, 0, 5, deck1};
+        jucatori.push_back(jucatornou);
+    }
+    GameOn(jucatori);
+    /*
     Card vcard[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     Deck deck1;
     for (int i = 0; i < 10; i++)
@@ -150,6 +284,6 @@ int main()
     Player jucator1{"Ioan", 100, 5, deck1};
     Card card2 = {11};
     jucator1.addToHand(card2);
-    jucator1.showHand();
+    std::cout<<jucator1;*/
     return 0;
 }
