@@ -32,6 +32,12 @@ public:
     Deck(const std::vector<Card> &cards_ = {}) : cards{cards_} {}
     Deck(const Deck &other) : cards{other.cards} {}
     void addToDeck(Card card_) { cards.push_back(card_); }
+    void createDeck(Deck &deck)
+    {
+        Card vcard[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        for (int i = 0; i < 11; i++)
+            deck.addToDeck(vcard[i]);
+    }
     void emptyDeck()
     {
         while (!cards.empty())
@@ -127,7 +133,7 @@ public:
     int getScore() const { return score; }
     int getHealth() const { return hp; }
     void addToHand(Card card_) { hand.addToDeck(card_); }
-    void showHand() { std::cout << hand << '\n'; }
+    void showHand() { std::cout << hand<<" "; }
     void clearHand() { hand.emptyDeck(); }
     void resetScore() { score = 0; }
     void addtoScore(int add) { score = score + add; }
@@ -158,102 +164,141 @@ void GameOn(std::vector<Player> players)
 {
     bool gaming = true;
     int round = 1;
-    while (gaming && (players[0].getHealth()>0 && players[1].getHealth()>0))
+    while (gaming && (players[0].getHealth() > 0 && players[1].getHealth() > 0))
     {
-        std::cout << "Incepe runda " << round << '\n';
+        std::cout << "\n\n"<< "Incepe runda " << round << "\n\n";
         players[0].clearHand();
         players[0].resetScore();
         players[1].clearHand();
         players[1].resetScore();
-        Card vcard[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
         Deck rounddeck;
-        for (int i = 0; i < 11; i++)
-            rounddeck.addToDeck(vcard[i]);
+        rounddeck.createDeck(rounddeck);
         rounddeck.shuffleDeck();
-        std::cout<<rounddeck<<'\n';
         int staying = 0;
         int choice;
         while (staying < 2)
         {
-            std::cout << players[0].getName()<<", hit(1) or stay(0)?" << '\n';
+            std::cout << players[0].getName() << ", it's your turn." << "\n\n";
+            std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2]"<<"\n\n";
             std::cin >> choice;
-            if (choice)
+            if (choice == 2)
+            {
+                std::cout<<'\n'<<"Your current hand: ";
+                players[0].showHand();
+                std::cout<<"Opponent's current hand: ";
+                players[1].showHand();
+                std::cout << "Available actions: Stay[0], Hit[1]"<<"\n\n";
+                std::cin>>choice;
+                std::cout<<'\n';
+            }
+            if (choice == 1)
             {
                 Card hitcard = rounddeck.dealCard();
                 if (hitcard.getValue() == 12)
                 {
-                    std::cout << "No more cards in the deck!" << '\n';
-                    if(staying>0)
-                        staying--;
+                    std::cout << "No more cards in the deck!" << "\n\n";
+                    if (staying < 2)
+                        staying++;
                 }
                 else
                 {
                     players[0].addToHand(hitcard);
                     players[0].addtoScore(hitcard.getValue());
-                    std::cout<<players[0].getName()<<", you drew the "<< hitcard.getValue()<<" card. Now you have "<<players[0].getScore()<<" total points. "<<'\n';
-                    if(staying>0)
+                    std::cout << players[0].getName() << ", you drew the " << hitcard.getValue() << " card." << "\n\n";
+                    if (staying > 0)
                         staying--;
                 }
             }
-            else if (staying < 2)
-                staying++;
-            std::cout << players[1].getName()<<", hit(1) or stay(0)?" << '\n';
+            else if (choice == 0)
+            {
+                if (staying < 2)
+                    staying++;
+            }
+            else
+            {
+                gaming = false;
+                break;
+            }
+            std::cout << players[1].getName() << ", it's your turn." << "\n\n";
+            std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2]"<<"\n\n";
             std::cin >> choice;
-            if (choice)
+            std::cout<<'\n';
+            if (choice == 2)
+            {
+                std::cout<<'\n'<<"Your current hand: ";
+                players[1].showHand();
+                std::cout<<"Opponent's current hand: ";
+                players[0].showHand();
+                std::cout << "Available actions: Stay[0], Hit[1]"<<"\n\n";
+                std::cin>>choice;
+            }
+            if (choice == 1)
             {
                 Card hitcard = rounddeck.dealCard();
                 if (hitcard.getValue() == 12)
                 {
-                    std::cout << "No more cards in the deck!" << '\n';
-                    if(staying>0)
-                        staying--;
+                    std::cout << "No more cards in the deck!" << "\n\n";
+                    if (staying < 2)
+                        staying++;
                 }
                 else
                 {
                     players[1].addToHand(hitcard);
                     players[1].addtoScore(hitcard.getValue());
-                    std::cout<<players[1].getName()<<", you drew the "<< hitcard.getValue()<<" card. Now you have "<<players[1].getScore()<<" total points. "<<'\n';
-                    if(staying>0)
+                    std::cout << players[1].getName() << ", you drew the " << hitcard.getValue() << " card." << "\n\n";
+                    if (staying > 0)
                         staying--;
                 }
             }
-            else if (staying < 2)
-                staying++;
+            else if (choice == 0)
+            {
+                if (staying < 2)
+                    staying++;
+            }
+            else
+            {
+                gaming = false;
+                break;
+            }
         }
         int s1, s2;
         s1 = players[0].getScore();
         s2 = players[1].getScore();
-        std::cout<<players[0].getName()<<" has "<<s1<<" total points, while "<<players[1].getName()<<" has "<<s2<<" total points"<<'\n';
+        std::cout << players[0].getName() << " has " << s1 << " total points, while " << players[1].getName() << " has " << s2 << " total points" << "\n\n";
         if (s1 > s2 && s1 <= 21)
         {
-            std::cout<<players[0].getName()<<" wins this round!"<<'\n';
+            std::cout << players[0].getName() << " wins this round!" << "\n\n";
             players[1].lowerHealth();
         }
-        else if(s2>21 && s1<=21)
+        else if (s2 > 21 && s1 <= 21)
         {
-            std::cout<<players[0].getName()<<" wins this round!"<<'\n';
+            std::cout << players[0].getName() << " wins this round!" << "\n\n";
             players[1].lowerHealth();
         }
-        else if(s2>21 && s1>21 && s1<s2)
+        else if (s2 > 21 && s1 > 21 && s1 < s2)
         {
-            std::cout<<players[0].getName()<<" wins this round!"<<'\n';
+            std::cout << players[0].getName() << " wins this round!" << "\n\n";
             players[1].lowerHealth();
         }
-        else if(s1==s2)
+        else if (s1 == s2)
         {
-            std::cout<<"It's a draw!"<<'\n';
+            std::cout << "It's a draw!" << "\n\n";
         }
         else
         {
-            std::cout<<players[1].getName()<<" wins this round!"<<'\n';
+            std::cout << players[1].getName() << " wins this round!" << "\n\n";
             players[2].lowerHealth();
         }
+        std::cout<<"Continue? Yes[1], No[0].";
+        std::cin>>choice;
+        if(choice==0)
+            gaming=0;
         round++;
     }
-    if(players[0].getHealth()<1)
-        std::cout<<players[1].getName()<<" wins the match!"<<'\n';
-    else 
-        std::cout<<players[0].getName()<<" wins the match!"<<'\n';
+    if (players[0].getHealth() < 1)
+        std::cout << players[1].getName() << " wins the match!" << "\n\n";
+    else
+        std::cout << players[0].getName() << " wins the match!" << "\n\n";
 }
 int main()
 {
