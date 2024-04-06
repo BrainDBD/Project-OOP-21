@@ -1,4 +1,5 @@
-
+#ifndef GAME_H
+#define GAME_H
 #include "Player.h"
 class Game
 {
@@ -14,3 +15,4 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
     ~Game() = default;
 };
+#endif  //GAME_H

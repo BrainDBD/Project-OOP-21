@@ -1,4 +1,5 @@
 #include "Card.h"
+
 Card::Card(const int rank_) : rank{rank_} {}
 int Card::getValue() const { return rank; }
 Card &Card::operator=(const Card &other)

@@ -1,3 +1,5 @@
+#ifndef PLAYER_H
+#define PLAYER_H
 #include "Deck.h"
 class Player
 {
@@ -23,3 +25,4 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Player &player);
     ~Player() = default;
 };
+#endif  //PLAYER_H

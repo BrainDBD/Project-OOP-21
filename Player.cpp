@@ -1,4 +1,3 @@
-#include "Deck.h"
 #include "Player.h"
 
 Player::Player(std::string name_, int score_, int hp_ , Deck hand_) : name{name_}, score{score_}, hp{hp_}, hand(hand_) {}
@@ -28,6 +27,6 @@ std::ostream &operator<<(std::ostream &os, const Player &player)
     os << "Name: " << player.name << '\n';
     os << "Score: " << player.score << '\n';
     os << "Health: " << player.hp << '\n';
-     os << "Hand: " << player.hand << '\n';
+    os << "Hand: " << player.hand << '\n';
     return os;
 }
