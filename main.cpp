@@ -5,14 +5,15 @@ void newMatch()
     Deck newhand;
     newhand.createDeck(newhand);
     std::vector<Player> jucatori;
-    int n=2;
+    int n = 2;
     int health;
-    std::cout<<"How much health do the players have? ";
-    std::cin>>health;
-    if(health<1)
-    std::cout<<"Invalid health input.";
-    else
+    std::cout << "How much health do the players have? ";
+    std::cin >> health;
+    while (health < 1)
     {
+        std::cout << "Invalid health input. Give a value that is at least 1. ";
+        std::cin >> health;
+    }
     for (int i = 1; i <= n; i++)
     {
         std::cout << "Player " << i << " what is your name?" << '\n';
@@ -21,27 +22,26 @@ void newMatch()
         Player jucatornou{nume, 0, health, newhand};
         jucatori.push_back(jucatornou);
     }
-    Game joc={jucatori,newhand};
+    Game joc = {jucatori, newhand};
     joc.Match();
-    std::cout<<"Play again? Yes[1], No[0] ";
-    std::cin>>n;
-    while(n!=0 && n!=1)
+    std::cout << "Play again? Yes[1], No[0] ";
+    std::cin >> n;
+    while (n != 0 && n != 1)
     {
-        std::cout<<"Invalid input. Choose [1] for Yes and [0] for No. ";
-        std::cin>>n;
+        std::cout << "Invalid input. Choose [1] for Yes and [0] for No. ";
+        std::cin >> n;
     }
-    while(n==1)
+    while (n == 1)
     {
-        Game newjoc={jucatori,newhand};
+        Game newjoc = {jucatori, newhand};
         newjoc.Match();
-        std::cout<<"Play again? Yes[1], No[0] ";
-        std::cin>>n;
-        while(n!=0 && n!=1)
+        std::cout << "Play again? Yes[1], No[0] ";
+        std::cin >> n;
+        while (n != 0 && n != 1)
         {
-            std::cout<<"Invalid input. Choose [1] for Yes and [0] for No. ";
-            std::cin>>n;
+            std::cout << "Invalid input. Choose [1] for Yes and [0] for No. ";
+            std::cin >> n;
         }
-    }        
     }
 }
 int main()
