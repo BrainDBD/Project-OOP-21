@@ -22,7 +22,7 @@ For the OOP project, I chose to make a modified game of Blackjack/21, based on t
 
 ## How to play
 
-- Clone the repository and run the program using the build.bat file using the following commands: 'build', then 'main.exe' with CMD.
+- Clone the repository and run the program using the 'PlayGame.bat' file.
 
 ## Explaining the Code
 
