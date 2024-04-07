@@ -26,6 +26,15 @@ void Game::Match()
         rounddeck.shuffleDeck();
         staying = 0;
         target = 21;
+        Card hitcard = rounddeck.dealCard();
+        players[0].addToHand(hitcard);
+        players[0].addtoScore(hitcard.getValue());
+        std::cout << players[0].getName() << ", you drew the " << hitcard.getValue() << " card."<<'\n';
+        hitcard = rounddeck.dealCard();
+        players[1].addToHand(hitcard);
+        players[1].addtoScore(hitcard.getValue());
+        std::cout << players[1].getName() << ", you drew the " << hitcard.getValue() << " card."
+                  << "\n\n";
         while (staying < 2)
         {
             std::cout << players[0].getName() << ", it's your turn."
@@ -59,7 +68,7 @@ void Game::Match()
             }
             if (choice == 1)
             {
-                Card hitcard = rounddeck.dealCard();
+                hitcard = rounddeck.dealCard();
                 if (hitcard.getValue() == 12)
                 {
                     std::cout << "No more cards in the deck!"
@@ -117,7 +126,7 @@ void Game::Match()
             }
             if (choice == 1)
             {
-                Card hitcard = rounddeck.dealCard();
+                hitcard = rounddeck.dealCard();
                 if (hitcard.getValue() == 12)
                 {
                     std::cout << "No more cards in the deck!"
