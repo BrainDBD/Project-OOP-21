@@ -29,7 +29,7 @@ void Game::Match()
         Card hitcard = rounddeck.dealCard();
         players[0].addToHand(hitcard);
         players[0].addtoScore(hitcard.getValue());
-        std::cout << players[0].getName() << ", you drew the " << hitcard.getValue() << " card."<<'\n';
+        std::cout << players[0].getName() << ", you drew the " << hitcard.getValue() << " card." << '\n';
         hitcard = rounddeck.dealCard();
         players[1].addToHand(hitcard);
         players[1].addtoScore(hitcard.getValue());

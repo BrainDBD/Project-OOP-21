@@ -14,6 +14,7 @@ void newMatch()
         std::cout << "Invalid health input. Give a value that is at least 1. ";
         std::cin >> health;
     }
+    std::cout << "\n";
     for (int i = 1; i <= n; i++)
     {
         std::cout << "Player " << i << " what is your name?" << '\n';

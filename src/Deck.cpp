@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <random>
 
-
 Deck::Deck(const std::vector<Card> &cards_) : cards{cards_} {}
 Deck::Deck(const Deck &other) : cards{other.cards} {}
 void Deck::addToDeck(Card card_) { cards.push_back(card_); }
@@ -16,11 +15,11 @@ void Deck::createDeck(Deck &deck)
 void Deck::emptyDeck()
 {
     while (!cards.empty())
-        {
-            Card dealtcard = cards.back();
-            cards.pop_back();
-        }
+    {
+        Card dealtcard = cards.back();
+        cards.pop_back();
     }
+}
 void Deck::shuffleDeck()
 {
     std::random_device rd;
@@ -43,7 +42,7 @@ Card Deck::dealCard()
 }
 Card Deck::lastCard()
 {
-    Card lastcard =cards.back();
+    Card lastcard = cards.back();
     return lastcard;
 }
 Deck &Deck::operator=(const Deck &other)
