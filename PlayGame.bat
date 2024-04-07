@@ -1,3 +1,4 @@
+@echo off
 mkdir obj
 g++ -c -o obj/Card.o src/Card.cpp
 g++ -c -o obj/Deck.o src/Deck.cpp
@@ -14,3 +15,4 @@ del main.o
 del Player.o 
 cd .. 
 rmdir obj
+@echo on 
