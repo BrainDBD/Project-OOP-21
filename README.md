@@ -1,61 +1,38 @@
 # Proiect POO: Game of 21/Blackjack
 
-Mi-am propus pentru acest proiect să realizez un program bazat pe o versiune personalizată a jocului de cărți "21" sau "Black Jack", în care jucătorii trag cărți, încercând să ajungă la o sumă cât mai aproape de 21 fără să depășească valoarea.
+For the OOP project, I chose to make a modified game of Blackjack/21, based on the Resident Evil 7 incarnation. This program utilizes base OOP notions like classes and objects.
 
+## Rules
 
-### Tema 0
+#### Cards and Decks
 
-- [x] Nume proiect (poate fi schimbat ulterior)
-- [x] Scurtă descriere a temei alese, ce v-ați propus să implementați
+- Normal cards are numbered, 1 to 11. When a player has a card drawn, its number is added to their score.
+- A normal deck is made out of 11 cards, each with a different number. Both players share this deck, so if a player has drawn the 1 Card, then other players can't draw it for that round.
 
-## Tema 1
+#### Gameplay
 
-#### Cerințe
-- [ ] definirea a minim **3-4 clase** folosind compunere cu clasele definite de voi
-- [ ] constructori de inițializare
-- [ ] pentru o aceeași (singură) clasă: constructor de copiere, `operator=` de copiere, destructor
-<!-- - [ ] pentru o altă clasă: constructor de mutare, `operator=` de mutare, destructor -->
-<!-- - [ ] pentru o altă clasă: toate cele 5 funcții membru speciale -->
-- [ ] `operator<<` pentru toate clasele pentru afișare (std::ostream)
-- [ ] cât mai multe `const` (unde este cazul)
-- [ ] implementarea a minim 3 funcții membru publice pentru funcționalități specifice temei alese, dintre care cel puțin 1-2 funcții mai complexe
-  - nu doar citiri/afișări sau adăugat/șters elemente într-un/dintr-un vector
-- [ ] scenariu de utilizare a claselor definite:
-  - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
-  - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există); dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [ ] tag de `git`: de exemplu `v0.1`
-- [ ] serviciu de integrare continuă (CI); exemplu: GitHub Actions
+- Each match of 21 takes place over multiple rounds.
+- Each round, players draw cards from a shared deck in an attempt to get as much as 21 points, without going over.
+- On their turn, a player can choose to stay or hit. If they hit, they'll be dealt a random card from the deck. Staying ends the round without drawing a card. Trying to hit while the deck is empty also counts as staying.
+- Additionally, a player can choose to view the current state of the table, seeing each player's hand.
+- A round ends when both players choose to stay, one after another.
+- At the end of the round, the winner is determined this way: First, if one player is above 21 and the other isn't, the former wins. Otherwise, the player closest to 21 wins.
+- Decks are remade and shuffled between rounds.
+- When a player loses a round, they lose Health (1 by default). When a player reaches 0 Health, they lose the match.
 
-## Tema 2
+## How to play
 
-#### Cerințe
-- [ ] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [ ] moșteniri:
-  - minim o clasă de bază și **3 clase derivate**
-  - ierarhia trebuie să fie cu bază proprie, nu derivată dintr-o clasă predefinită
-  - [ ] clasă cu atribut de tip pointer la o clasă de bază cu derivate
-  - [ ] funcții virtuale (pure) apelate prin pointeri de bază din clasa care conține atributul de tip pointer de bază
-    - minim o funcție virtuală va fi **specifică temei** (e.g. nu simple citiri/afișări)
-    - constructori virtuali (clone): sunt necesari, dar nu se consideră funcții specifice temei
-  - [ ] apelarea constructorului din clasa de bază din constructori din derivate
-  - [ ] smart pointers (recomandat, opțional)
-  - [ ] `dynamic_cast`/`std::dynamic_pointer_cast` pentru downcast cu sens
-- [ ] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-- [ ] excepții
-  - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim **3** clase pentru erori specifice
-  - [ ] utilizare cu sens: de exemplu, `throw` în constructor (sau funcție care întoarce un obiect), `try`/`catch` în `main`
-- [ ] funcții și atribute `static`
-- [ ] STL
-- [ ] cât mai multe `const`
-- [ ] la sfârșit: commit separat cu adăugarea unei noi clase derivate fără a modifica restul codului, **pe lângă cele 3 derivate deja adăugate**
-  - noua derivată nu poate fi una existentă care a fost ștearsă și adăugată din nou
-- [ ] tag de `git`: de exemplu `v0.2`
+- Clone the repository and run the program using the build.bat file using the following commands: 'build', then 'main.exe' with CMD.
 
-## Tema 3
+## Explaining the Code
 
-#### Cerințe
-- [ ] 2 șabloane de proiectare (design patterns)
-- [ ] o clasă șablon cu sens; minim **2 instanțieri**
-  - [ ] preferabil și o funcție șablon (template) cu sens; minim 2 instanțieri
-<!-- - [ ] o specializare pe funcție/clasă șablon -->
-- [ ] tag de `git`: de exemplu `v0.3` sau `v1.0`
+-Card.cpp is used in initialising, copying and showing cards.
+-Deck.cpp is used to create decks, shuffle them, add or remove cards from them and show them.
+-Player.cpp manages a player's health, hand and score.
+-Game.cpp contains the Match function, that acts as the main game. It uses concepts from the other classes.
+-main.cpp has the newMatch function, which create a set of players and rules for the purposes of a 21 match.
+
+## Not yet implemented
+- [ ] Trump Cards.
+- [ ] Different game modes.
+- [ ] AI for computer dealer, used for future singleplayer based modes.
