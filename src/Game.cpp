@@ -14,7 +14,7 @@ void Game::Match()
     {
         std::cout << "\n\n"
                   << "Round " << round << " begins."
-                  << "\n";
+                  << "\n\n";
         std::cout << players[0].getName() << " has " << players[0].getHealth() << " health." << '\n';
         std::cout << players[1].getName() << " has " << players[1].getHealth() << " health."
                   << "\n\n";
