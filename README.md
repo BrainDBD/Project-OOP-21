@@ -22,15 +22,15 @@ For the OOP project, I chose to make a modified game of Blackjack/21, based on t
 
 ## How to play
 
-- Clone the repository and run the program using the build.bat file using the following commands: 'build', then 'main.exe' with CMD.
+- Clone the repository and run the program using the 'PlayGame.bat' file.
 
 ## Explaining the Code
 
--Card.cpp is used in initialising, copying and showing cards.
--Deck.cpp is used to create decks, shuffle them, add or remove cards from them and show them.
--Player.cpp manages a player's health, hand and score.
--Game.cpp contains the Match function, that acts as the main game. It uses concepts from the other classes.
--main.cpp has the newMatch function, which create a set of players and rules for the purposes of a 21 match.
+- Card.cpp is used in initialising, copying and showing cards.
+- Deck.cpp is used to create decks, shuffle them, add or remove cards from them and show them.
+- Player.cpp manages a player's health, hand and score.
+- Game.cpp contains the Match function, that acts as the main game. It uses concepts from the other classes.
+- main.cpp has the newMatch function, which create a set of players and rules for the purposes of a 21 match.
 
 ## Not yet implemented
 - [ ] Trump Cards.
