@@ -1,4 +1,4 @@
-#include "Card.h"
+#include "../include/Card.h"
 
 Card::Card(const int rank_) : rank{rank_} {}
 int Card::getValue() const { return rank; }

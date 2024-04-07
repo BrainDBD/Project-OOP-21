@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "../include/Game.h"
 
 Game::Game(std::vector<Player> &players_, Deck maindeck_) : players{players_}, maindeck{maindeck_} {}
 Game::Game(const Game &other) : players{other.players}, maindeck{other.maindeck} {};

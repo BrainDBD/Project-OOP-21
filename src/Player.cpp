@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "../include/Player.h"
 
 Player::Player(std::string name_, int score_, int hp_ , Deck hand_) : name{name_}, score{score_}, hp{hp_}, hand(hand_) {}
 Player::Player(const Player &other) : name{other.name}, score{other.score}, hp{other.hp}, hand{other.hand} {}
