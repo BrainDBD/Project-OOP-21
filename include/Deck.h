@@ -12,12 +12,17 @@ private:
 public:
     Deck(const std::vector<Card> &cards_ = {});
     Deck(const Deck &other);
-    void addToDeck(Card card_);
-    void createDeck(Deck &deck);
-    void emptyDeck();
+    void createDeck();
     void shuffleDeck();
+    void emptyDeck();
+    void addToDeck(Card card_);
+    void removefromDeck(Card card_);
+    int DeckSize();
     Card dealCard();
+    Card drawCard(Card card_);
     Card lastCard();
+    void removeLastCard();
+    void exchange(Deck &other);
     friend std::ostream &operator<<(std::ostream &os, const Deck &deck);
     Deck &operator=(const Deck &other);
     ~Deck() = default;

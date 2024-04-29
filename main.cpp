@@ -3,16 +3,19 @@
 void newMatch()
 {
     Deck newhand;
-    newhand.createDeck(newhand);
+    newhand.createDeck();
+    TrumpDeck newthand;
+    newthand.createTrumpDeck();
+    newthand.shuffleTrumpDeck();
     std::vector<Player> jucatori;
     int n = 2;
-    int health;
-    std::cout << "How much health do the players have? ";
-    std::cin >> health;
-    while (health < 1)
+    int maxscore;
+    std::cout << "What score must a Player have to win? ";
+    std::cin >> maxscore;
+    while (maxscore < 1)
     {
-        std::cout << "Invalid health input. Give a value that is at least 1. ";
-        std::cin >> health;
+        std::cout << "Invalid score input. Give a value that is at least 1. ";
+        std::cin >> maxscore;
     }
     std::cout << "\n";
     for (int i = 1; i <= n; i++)
@@ -20,11 +23,11 @@ void newMatch()
         std::cout << "Player " << i << " what is your name?" << '\n';
         std::string nume;
         std::cin >> nume;
-        Player jucatornou{nume, 0, health, newhand};
+        Player jucatornou{nume, 0, 0, newhand, newthand};
         jucatori.push_back(jucatornou);
     }
-    Game joc = {jucatori, newhand};
-    joc.Match();
+    Game joc = {jucatori, newhand, newthand};
+    joc.Match(maxscore);
     std::cout << "Play again? Yes[1], No[0] ";
     std::cin >> n;
     while (n != 0 && n != 1)
@@ -34,8 +37,8 @@ void newMatch()
     }
     while (n == 1)
     {
-        Game newjoc = {jucatori, newhand};
-        newjoc.Match();
+        Game newjoc = {jucatori, newhand, newthand};
+        newjoc.Match(maxscore);
         std::cout << "Play again? Yes[1], No[0] ";
         std::cin >> n;
         while (n != 0 && n != 1)
