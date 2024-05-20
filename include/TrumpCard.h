@@ -1,18 +1,20 @@
 #ifndef TRUMPCARD_H
 #define TRUMPCARD_H
 
-#include <iostream>
+#include "AnyCard.h"
 #include "./enums/TrumpType.h"
 
-class TrumpCard {
+class TrumpCard : public AnyCard
+{
 private:
     TrumpType type;
 public:
+    TrumpCard() = default;
     TrumpCard(TrumpType type_ = TrumpType::None);
     TrumpCard &operator=(const TrumpCard &other);
-    std::string getString();
+    std::string getType() const override;
     friend std::ostream &operator<<(std::ostream &os, const TrumpCard &tcard);
-    ~TrumpCard() = default;
+    ~TrumpCard();
 };
 
 #endif  // TRUMPCARD_H

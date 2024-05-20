@@ -1,0 +1,32 @@
+#include "../include/NumHand.h"
+
+NumHand::NumHand(const std::vector<AnyCard*> &cards_) : NumCardContainer(cards_) {}
+NumHand::NumHand(const NumHand &other) : NumCardContainer(other) {}
+void NumHand::addToDeck(const NumCard &card_) { cards.push_back(new NumCard(card_)); }
+NumCard NumHand::lastCard()
+{
+    NumCard lastcard = *dynamic_cast<NumCard*>(cards.back());
+    return lastcard;
+}
+void NumHand::exchange(NumHand &other)
+{
+    NumCard lastcard1 = lastCard();
+    NumCard lastcard2 = other.lastCard();
+    removeLastCard();
+    other.removeLastCard();
+    addToDeck(lastcard2);
+    other.addToDeck(lastcard1);
+}
+NumHand &NumHand::operator=(const NumHand &other)
+{
+    for (unsigned int i = 0; i < other.cards.size(); i++)
+        cards[i] = other.cards[i];
+    return *this;
+}
+void NumHand::Afisare(std::ostream &os)
+{
+    for (unsigned int i = 0; i < cards.size(); i++)
+        std::cout << cards[i] << " (" << dynamic_cast<NumCard *>(cards[i])->getValue() << ")";
+    std::cout << '\n';
+}
+NumHand::~NumHand() = default;

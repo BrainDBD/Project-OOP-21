@@ -1,95 +1,76 @@
 #include "../include/TrumpDeck.h"
-#include <algorithm>
-#include <random>
 
-TrumpDeck::TrumpDeck(const std::vector<TrumpCard> &tcards_) : tcards{tcards_} {}
-TrumpDeck::TrumpDeck(const TrumpDeck &other) : tcards{other.tcards} {}
-void TrumpDeck::addToTrumpDeck(TrumpCard tcard_) { tcards.push_back(tcard_); }
-void TrumpDeck::removefromTrumpDeck(TrumpCard tcard_)
+TrumpDeck::TrumpDeck(const std::vector<AnyCard*> &cards_) : TrumpCardContainer(cards_) {}
+TrumpDeck::TrumpDeck(const TrumpDeck &other) : TrumpCardContainer(other) {}
+void TrumpDeck::removefromDeck(TrumpCard tcard_)
 {
-    for (unsigned int i = 0; i < tcards.size(); i++)
-        if (tcards[i].getString() == tcard_.getString())
+    for (unsigned int i = 0; i < cards.size(); i++)
+        if (cards[i]->getType() == tcard_.getType())
         {
-            tcards.erase(tcards.begin() + i);
+            cards.erase(cards.begin() + i);
             break;
         }
 }
-void TrumpDeck::createTrumpDeck()
+void TrumpDeck::createDeck()
 {
-    TrumpCard vtcard[22] = {TrumpType::Attack, TrumpType::Attack, TrumpType::Attack, TrumpType::Shield, TrumpType::Shield, TrumpType::Shield, TrumpType::Return, TrumpType::Return, TrumpType::Remove, TrumpType::Remove, TrumpType::Exchange, TrumpType::Exchange, TrumpType::Card2, TrumpType::Card3, TrumpType::Card4, TrumpType::Card5, TrumpType::Card6, TrumpType::Card7, TrumpType::Clairvoyance, TrumpType::Clairvoyance, TrumpType::GoFor17, TrumpType::GoFor24};
-    for (int i = 0; i < 22; i++)
-        tcards.push_back(vtcard[i]);
-}
-void TrumpDeck::emptyTrumpDeck()
-{
-    while (!tcards.empty())
+    for (int type = static_cast<int>(TrumpType::Attack); type <= static_cast<int>(TrumpType::GoFor24); ++type)
     {
-        TrumpCard dealttcard = tcards.back();
-        tcards.pop_back();
+        TrumpType cardType = static_cast<TrumpType>(type);
+        AnyCard *auxcard = new TrumpCard{cardType};
+        int i
+        ;
+        if (type == static_cast<int>(TrumpType::Attack) || type == static_cast<int>(TrumpType::Shield) || type == static_cast<int>(TrumpType::Return) || type == static_cast<int>(TrumpType::Remove))
+            i = 3;
+        else if (type == static_cast<int>(TrumpType::Exchange) || type == static_cast<int>(TrumpType::Destroy) || type == static_cast<int>(TrumpType::Clairvoyance))
+            i = 2;
+        else
+            i = 1;
+        for (int j = 0; j < i; j++)
+            cards.emplace_back(auxcard);
     }
 }
-void TrumpDeck::shuffleTrumpDeck()
+void TrumpDeck::shuffleDeck()
 {
     std::random_device rd;
     std::mt19937 g(rd());
-    shuffle(tcards.begin(), tcards.end(), g);
-}
-int TrumpDeck::showTrumpSize()
-{
-    int s = tcards.size();
-    return s;
+    shuffle(cards.begin(), cards.end(), g);
 }
 bool TrumpDeck::checkEmpty()
 {
-    if (!tcards.empty())
+    if (!cards.empty())
         return 0;
     return 1;
 }
-TrumpCard TrumpDeck::dealTrumpCard()
+TrumpCard TrumpDeck::dealCard()
 {
-    if (!tcards.empty())
+    if (!cards.empty())
     {
-        TrumpCard dealttcard = tcards.back(); // pretend that the deck is bottom-up
-        tcards.pop_back();
+        TrumpCard dealttcard = *dynamic_cast<TrumpCard*>(cards.back());
+        cards.pop_back();
         return dealttcard;
     }
     else
     {
-        TrumpCard errortcard = {TrumpType::Error};
-        return errortcard; // will serve as a tell that the deck is empty
+        TrumpCard errortcard{TrumpType::Error};
+        return errortcard;
     }
 }
-TrumpCard TrumpDeck::drawTrumpCard(TrumpCard tcard_)
+TrumpCard TrumpDeck::drawCard(TrumpCard tcard_)
 {
-    for (unsigned int i = 0; i < tcards.size(); i++)
-        if (tcards[i].getString() == tcard_.getString())
+    for (unsigned int i = 0; i < cards.size(); i++)
+        if (cards[i]->getType() == tcard_.getType())
         {
-            TrumpCard drawntcard = tcards[i];
-            removefromTrumpDeck(tcards[i]);
+            TrumpCard drawntcard = *dynamic_cast<TrumpCard*>(cards[i]);
+            removefromDeck(*dynamic_cast<TrumpCard*>(cards[i]));
             return drawntcard;
         }
     TrumpCard drawntcard = {TrumpType::Error};
     return drawntcard;
 }
-TrumpCard TrumpDeck::lastTrumpCard()
-{
-    TrumpCard lasttcard = tcards.back();
-    return lasttcard;
-}
-void TrumpDeck::removeLastTrumpCard()
-{
-    tcards.pop_back();
-}
 TrumpDeck &TrumpDeck::operator=(const TrumpDeck &other)
 {
-    for (unsigned int i = 0; i < other.tcards.size(); i++)
-        tcards[i] = other.tcards[i];
+    for (unsigned int i = 0; i < other.cards.size(); i++)
+        cards[i] = other.cards[i];
     return *this;
 }
-std::ostream &operator<<(std::ostream &os, const TrumpDeck &tdeck)
-{
-    for (unsigned int i = 0; i < tdeck.tcards.size(); i++)
-        std::cout << tdeck.tcards[i] << " ";
-    std::cout << '\n';
-    return os;
-}
+TrumpDeck::~TrumpDeck() = default;

@@ -2,31 +2,21 @@
 #define TRUMPDECK_H
 
 #include <vector>
-#include "TrumpCard.h"
+#include "TrumpCardContainer.h"
 
-class TrumpDeck
+class TrumpDeck : public TrumpCardContainer
 {
-private:
-    std::vector<TrumpCard> tcards;
-
 public:
-    TrumpDeck() = default;
-    TrumpDeck(const std::vector<TrumpCard> &tcards_);
+    TrumpDeck(const std::vector<AnyCard*> &cards_ = {});
     TrumpDeck(const TrumpDeck &other);
-    void addToTrumpDeck(TrumpCard tcard_);
-    void removefromTrumpDeck(TrumpCard tcard_);
-    void createTrumpDeck();
-    void emptyTrumpDeck();
-    void shuffleTrumpDeck();
-    int showTrumpSize();
+    void removefromDeck(TrumpCard tcard_);
+    void createDeck();
+    void shuffleDeck();
     bool checkEmpty();
-    TrumpCard dealTrumpCard();
-    TrumpCard drawTrumpCard(TrumpCard tcard_);
-    TrumpCard lastTrumpCard();
-    void removeLastTrumpCard();
+    TrumpCard dealCard();
+    TrumpCard drawCard(TrumpCard tcard_);
     TrumpDeck &operator=(const TrumpDeck &other);
-    friend std::ostream &operator<<(std::ostream &os, const TrumpDeck &tdeck);
-    ~TrumpDeck() = default;
+    ~TrumpDeck() override;
 };
 
 #endif  // TRUMPCARD_H
