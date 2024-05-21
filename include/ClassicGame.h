@@ -2,16 +2,16 @@
 #define CGAME_H
 
 #include "ClassicPlayer.h"
-#include "FullDeck.h"
+#include "ClassicDeck.h"
 #include "Exceptions.h"
 
 class ClassicGame
 {
 private:
     std::vector<ClassicPlayer> players;
-    FullDeck maindeck;
+    ClassicDeck maindeck;
 public:
-    ClassicGame(std::vector<ClassicPlayer> &players_, FullDeck maindeck_);
+    ClassicGame(std::vector<ClassicPlayer> &players_, ClassicDeck maindeck_);
     ClassicGame(const ClassicGame &other);
     void Match();
     void showHand(int playernumber, int &choice);

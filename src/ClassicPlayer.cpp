@@ -1,6 +1,6 @@
 #include "../include/ClassicPlayer.h"
 
-ClassicPlayer::ClassicPlayer(std::string name_, int points_, int score_, FullHand hand_) : StarterPlayer(name_, points_, score_), hand{hand_} {}
+ClassicPlayer::ClassicPlayer(std::string name_, int points_, int score_, ClassicHand hand_) : StarterPlayer(name_, points_, score_), hand{hand_} {}
 ClassicPlayer::ClassicPlayer(const ClassicPlayer &other) : StarterPlayer(other), hand{other.hand} {}
 void ClassicPlayer::showHand() { std::cout << hand << calculatePoints() << '\n'; }
 int ClassicPlayer::HandSize()
@@ -14,11 +14,11 @@ void ClassicPlayer::showhiddenHand()
         std::cout << "## ";
     std::cout << '\n';
 }
-void ClassicPlayer::addToHand(FullCard card_) { hand.addToDeck(card_); }
+void ClassicPlayer::addToHand(ClassicCard card_) { hand.addToDeck(card_); }
 void ClassicPlayer::exchangeHands(ClassicPlayer &other) { hand.exchange(other.hand); }
-void ClassicPlayer::returnHand(FullHand &deck)
+void ClassicPlayer::returnHand(ClassicHand &deck)
 {
-    FullCard lastcard = hand.lastCard();
+    ClassicCard lastcard = hand.lastCard();
     hand.removeLastCard();
     deck.addToDeck(lastcard);
 }

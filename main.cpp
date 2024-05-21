@@ -233,7 +233,7 @@ void newNumMatch()
 
 void newClassicMatch()
 {
-    FullHand newhand;
+    ClassicHand newhand;
     std::vector<ClassicPlayer> jucatori;
     int n = 2;
     int maxscore;
@@ -275,7 +275,7 @@ void newClassicMatch()
         ClassicPlayer jucatornou{nume, 0, 1000, newhand};
         jucatori.push_back(jucatornou);
     }
-    FullDeck newdeck;
+    ClassicDeck newdeck;
     newdeck.createDeck();
     ClassicGame joc = {jucatori, newdeck};
     joc.Match();

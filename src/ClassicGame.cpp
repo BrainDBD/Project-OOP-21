@@ -1,6 +1,6 @@
 #include "../include/ClassicGame.h"
 
-ClassicGame::ClassicGame(std::vector<ClassicPlayer> &players_, FullDeck maindeck_) : players{players_}, maindeck{maindeck_} {}
+ClassicGame::ClassicGame(std::vector<ClassicPlayer> &players_, ClassicDeck maindeck_) : players{players_}, maindeck{maindeck_} {}
 ClassicGame::ClassicGame(const ClassicGame &other) : players{other.players}, maindeck{other.maindeck} {};
 void ClassicGame::Match()
 {
@@ -23,13 +23,13 @@ void ClassicGame::Match()
         players[0].resetPoints();
         players[1].clearHand();
         players[1].resetPoints();
-        FullDeck rounddeck = maindeck;
+        ClassicDeck rounddeck = maindeck;
         rounddeck.shuffleDeck();
         staying = 0;
         target = 21;
         bet1 = 50;
         bet2 = 50;
-        FullCard hitcard = rounddeck.dealCard();
+        ClassicCard hitcard = rounddeck.dealCard();
         players[0].addToHand(hitcard);
         players[0].addtoPoints(hitcard.getValue());
         std::cout << players[0].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card." << '\n';

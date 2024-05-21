@@ -2,7 +2,7 @@
 #define FULL_TYPE_H
 #include "Suit.h"    
 
-enum class FullType
+enum class ClassicType
 {
     Two,
     Three,
