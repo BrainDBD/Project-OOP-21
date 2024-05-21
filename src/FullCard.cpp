@@ -4,7 +4,10 @@ FullCard::FullCard(FullType type_, Suit suit_) : type(type_), suit(suit_) {}
 FullCard &FullCard::operator=(const FullCard &other)
 {
     if (this != &other)
+    {
         type = other.type;
+        suit = other.suit;
+    }
     return *this;
 }
 std::string FullCard::getType() const
@@ -40,8 +43,6 @@ std::string FullCard::getType() const
         strtype = "None";
     else if (type == FullType::Error)
         strtype = "Error";
-    else if (type == FullType::None)
-        strtype = "None";
     else
         strtype = "Unknown";
     return strtype;

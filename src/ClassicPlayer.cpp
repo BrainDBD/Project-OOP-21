@@ -2,7 +2,6 @@
 
 ClassicPlayer::ClassicPlayer(std::string name_, int points_, int score_, FullHand hand_) : StarterPlayer(name_, points_, score_), hand{hand_} {}
 ClassicPlayer::ClassicPlayer(const ClassicPlayer &other) : StarterPlayer(other), hand{other.hand} {}
-std::string ClassicPlayer::getName() const { return name; }
 void ClassicPlayer::showHand() { std::cout << hand << calculatePoints() << '\n'; }
 int ClassicPlayer::HandSize()
 {
@@ -24,7 +23,6 @@ void ClassicPlayer::returnHand(FullHand &deck)
     deck.addToDeck(lastcard);
 }
 void ClassicPlayer::clearHand() { hand.emptyDeck(); }
-void ClassicPlayer::addtoPoints(int add) { points = points + add; }
 int ClassicPlayer::calculatePoints()
 {
     int aux = points;
@@ -39,10 +37,7 @@ int ClassicPlayer::calculatePoints()
     }
     return aux;
 }
-int ClassicPlayer::getPoints() const { return points; }
-void ClassicPlayer::resetPoints() { points = 0; }
-int ClassicPlayer::getScore() const { return score; }
-void ClassicPlayer::increaseScore(int betsy) { score = score + betsy; }
+
 void ClassicPlayer::decreaseScore(int betsy) { score = score - betsy; }
 ClassicPlayer &ClassicPlayer::operator=(const ClassicPlayer &other)
 {

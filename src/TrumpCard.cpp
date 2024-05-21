@@ -20,8 +20,10 @@ std::string TrumpCard::getType() const
         strtype = "Remove";
     else if (type == TrumpType::Exchange)
         strtype = "Exchange";
-    else if (type == TrumpType::Clairvoyance)
+    else if (type == TrumpType::Destroy)
         strtype = "Destroy";
+    else if (type == TrumpType::Clairvoyance)
+        strtype = "Clairvoyance";
     else if (type == TrumpType::Card2)
         strtype = "Draw 2 Card";
     else if (type == TrumpType::Card3)
@@ -59,8 +61,10 @@ std::ostream &operator<<(std::ostream &os, const TrumpCard &tcard)
         strtype = "Remove";
     else if (tcard.type == TrumpType::Exchange)
         strtype = "Exchange";
-    else if (tcard.type == TrumpType::Clairvoyance)
+    else if (tcard.type == TrumpType::Destroy)
         strtype = "Destroy";
+    else if (tcard.type == TrumpType::Clairvoyance)
+        strtype = "Clairvoyance";
     else if (tcard.type == TrumpType::Card2)
         strtype = "Draw 2 Card";
     else if (tcard.type == TrumpType::Card3)
@@ -83,7 +87,8 @@ std::ostream &operator<<(std::ostream &os, const TrumpCard &tcard)
         strtype = "Error";
     else
         strtype = "Unknown";
-    std::cout << strtype << " ";
+
+    os << strtype << " ";
     return os;
 }
 TrumpCard::~TrumpCard() = default;

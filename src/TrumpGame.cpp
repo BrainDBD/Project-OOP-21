@@ -14,6 +14,7 @@ void TrumpGame::Match(int targetscore)
     players[0].clearTrumpHand();
     players[1].clearTrumpHand();
     TrumpDeck roundtdeck = maintdeck;
+    std::cout<<roundtdeck;
     roundtdeck.shuffleDeck();
     while (gaming && players[0].getScore() < targetscore && players[1].getScore() < targetscore)
     {

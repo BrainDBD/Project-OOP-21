@@ -31,7 +31,7 @@ FullCard FullDeck::dealCard()
     }
     else
     {
-        FullCard errorcard{FullType::Error};
+        FullCard errorcard{FullType::Error, Suit::Error};
         return errorcard;
     }
 }

@@ -15,14 +15,17 @@ void FullCardContainer::emptyDeck()
         cards.pop_back();
     }
 }
-void FullCardContainer::removefromDeck(FullCard &card_)
+void FullCardContainer::removefromDeck(FullCard card_)
 {
-    for (unsigned int i = 0; i < cards.size(); i++)
-        if (cards[i]->getType() == card_.getType())
+    for (auto newfullCard = cards.begin(); newfullCard != cards.end(); ++newfullCard)
+    {
+        FullCard* fullCard = dynamic_cast<FullCard*>(*newfullCard);
+        if (fullCard && fullCard->getType() == card_.getType() && fullCard->getSuit() == card_.getSuit())
         {
-            cards.erase(cards.begin() + i);
+            cards.erase(newfullCard);
             break;
         }
+    }
 }
 void FullCardContainer::removeLastCard()
 {

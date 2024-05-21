@@ -1,7 +1,7 @@
 #include "../include/FullHand.h"
 
 FullHand::FullHand(const std::vector<AnyCard*> &cards_) : FullCardContainer(cards_) {}
-FullHand::FullHand(const FullHand &other) : FullCardContainer(other) {}
+FullHand::FullHand(const FullHand &other) : FullCardContainer(other.cards) {}
 void FullHand::addToDeck(const FullCard &card_) { cards.push_back(new FullCard(card_)); }
 FullCard FullHand::lastCard()
 {
