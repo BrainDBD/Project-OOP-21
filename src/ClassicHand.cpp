@@ -16,7 +16,7 @@ void ClassicHand::getDealerHand()
             std::cout << *dynamic_cast<ClassicCard*>(cards[i]) << " ";
         else
             std::cout<<"[[Face-Down Card]]";
-    std::cout << '\n';         
+    std::cout << "\n\n";         
 }
 ClassicCard ClassicHand::lastCard()
 {

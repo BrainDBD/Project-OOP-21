@@ -62,11 +62,34 @@ void ClassicGame::Turn(int i, ClassicDeck &gamedeck)
     while (!staying && players[i].calculatePoints() <= 21)
     {
         std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2], Show Dealer's Hand[3] ";
-        std::cin >> choice;
-        while (choice != 0 && choice != 1 && choice != 2 && choice != 3)
-        {
-            std::cout << "Invalid input. Available actions: Stay[0], Hit[1], Show Hands[2], Show Dealer's Hand[3] ";
-            std::cin >> choice;
+        choice = -1;
+        bool ok = false;
+        while (!ok)
+        {   
+            ok = true;
+            try
+            {
+                if (!(std::cin >> choice))
+                {
+                    ok = false;
+                    throw std::invalid_argument("Invalid input. Not an integer.");
+                }
+                if (choice != 0 && choice != 1 && choice != 2 && choice != 3)
+                {
+                    ok = false;
+                    throw InvalidChoice("Invalid input. Available actions: Stay[0], Hit[1], Show Hands[2], Show Dealer's Hand[3] ");
+                }
+            }
+            catch (const AnyException &e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+            catch (const std::invalid_argument &e)
+            {
+                std::cerr << e.what() << '\n';
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
         }
         std::cout << '\n';
         if (choice == 3)
@@ -241,7 +264,7 @@ void ClassicGame::Match(int targetscore)
             }
         round++;
     }
-    std::cout << '\n';
+    std::cout << "\n\n";
     for (int i = 0; i < playercount; i++)
         if (players[i].getScore() > targetscore)
             std::cout << players[i].getName() << " is a winner!" << '\n';
