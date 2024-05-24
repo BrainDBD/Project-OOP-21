@@ -9,7 +9,6 @@ class TrumpCard : public AnyCard
 private:
     TrumpType type;
 public:
-    TrumpCard() = default;
     TrumpCard(TrumpType type_ = TrumpType::None);
     TrumpCard &operator=(const TrumpCard &other);
     std::string getType() const override;
