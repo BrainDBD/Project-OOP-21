@@ -47,5 +47,4 @@ del TrumpGame.o
 del main.o
 cd .. 
 rmdir obj
-pause
 @echo on 

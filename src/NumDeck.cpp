@@ -4,7 +4,8 @@ NumDeck::NumDeck(const std::vector<AnyCard*> &cards_) : NumCardContainer(cards_)
 NumDeck::NumDeck(const NumDeck &other) : NumCardContainer(other) {}
 NumDeck::NumDeck(NumDeck&& other) noexcept : NumCardContainer()
 {
-    cards = std::move(other.cards);
+    cards.swap(other.cards);
+    //cards = std::move(other.cards);
     other.cards.clear();
 }
 void NumDeck::createDeck()

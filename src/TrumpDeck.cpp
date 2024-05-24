@@ -4,7 +4,8 @@ TrumpDeck::TrumpDeck(const std::vector<AnyCard*> &cards_) : TrumpCardContainer(c
 TrumpDeck::TrumpDeck(const TrumpDeck &other) : TrumpCardContainer(other) {}
 TrumpDeck::TrumpDeck(TrumpDeck&& other) noexcept : TrumpCardContainer()
 {
-    cards = std::move(other.cards);
+    cards.swap(other.cards);
+    //cards = std::move(other.cards);
     other.cards.clear();
 }
 void TrumpDeck::removefromDeck(TrumpCard tcard_)

@@ -4,7 +4,8 @@ ClassicHand::ClassicHand(const std::vector<AnyCard*> &cards_) : ClassicCardConta
 ClassicHand::ClassicHand(const ClassicHand &other) : ClassicCardContainer(other.cards) {}
 ClassicHand::ClassicHand(ClassicHand&& other) noexcept : ClassicCardContainer()
 {
-    cards = std::move(other.cards);
+    cards.swap(other.cards);
+    //cards = std::move(other.cards);
     other.cards.clear();
 }
 void ClassicHand::addToDeck(const ClassicCard &card_) { cards.push_back(new ClassicCard(card_)); }

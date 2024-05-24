@@ -4,7 +4,8 @@ NumHand::NumHand(const std::vector<AnyCard*> &cards_) : NumCardContainer(cards_)
 NumHand::NumHand(const NumHand &other) : NumCardContainer(other) {}
 NumHand::NumHand(NumHand&& other) noexcept : NumCardContainer()
 {
-    cards = std::move(other.cards);
+    cards.swap(other.cards);
+    //cards = std::move(other.cards);
     other.cards.clear();
 }
 void NumHand::addToDeck(const NumCard &card_) { cards.push_back(new NumCard(card_)); }

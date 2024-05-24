@@ -13,57 +13,84 @@ ClassicCard &ClassicCard::operator=(const ClassicCard &other)
 std::string ClassicCard::getType() const
 {
     std::string strtype;
-    if (type == ClassicType::Two)
-        strtype = "Two";
-    else if (type == ClassicType::Three)
-        strtype = "Three";
-    else if (type == ClassicType::Four)
-        strtype = "Four";
-    else if (type == ClassicType::Five)
-        strtype = "Five";
-    else if (type == ClassicType::Six)
-        strtype = "Six";
-    else if (type == ClassicType::Seven)
-        strtype = "Seven";
-    else if (type == ClassicType::Eight)
-        strtype = "Eight";
-    else if (type == ClassicType::Nine)
-        strtype = "Nine";
-    else if (type == ClassicType::Ten)
-        strtype = "Ten";
-    else if (type == ClassicType::Ace)
-        strtype = "Ace";
-    else if (type == ClassicType::Jack)
-        strtype = "Jack";
-    else if (type == ClassicType::Queen)
-        strtype = "Queen";
-    else if (type == ClassicType::King)
-        strtype = "King";
-    else if (type == ClassicType::None)
-        strtype = "None";
-    else if (type == ClassicType::Error)
-        strtype = "Error";
-    else
-        strtype = "Unknown";
+    switch (type)
+    {
+        case ClassicType::Two:
+            strtype = "Two";
+            break;
+        case ClassicType::Three:
+            strtype = "Three";
+            break;
+        case ClassicType::Four:
+            strtype = "Four";
+            break;
+        case ClassicType::Five:
+            strtype = "Five";
+            break;
+        case ClassicType::Six:
+            strtype = "Six";
+            break;
+        case ClassicType::Seven:
+            strtype = "Seven";
+            break;
+        case ClassicType::Eight:
+            strtype = "Eight";
+            break;
+        case ClassicType::Nine:
+            strtype = "Nine";
+            break;
+        case ClassicType::Ten:
+            strtype = "Ten";
+            break;
+        case ClassicType::Ace:
+            strtype = "Ace";
+            break;
+        case ClassicType::Jack:
+            strtype = "Jack";
+            break;
+        case ClassicType::Queen:
+            strtype = "Queen";
+            break;
+        case ClassicType::King:
+            strtype = "King";
+            break;
+        case ClassicType::None:
+            strtype = "None";
+            break;
+        case ClassicType::Error:
+            strtype = "Error";
+            break;
+        default:
+            strtype = "Unknown";
+    }
     return strtype;
 }
 std::string ClassicCard::getSuit() const
 {
     std::string strtype;
-    if (suit == Suit::Spades)
-        strtype = "Spades";
-    else if (suit == Suit::Clubs)
-        strtype = "Clubs";
-    else if (suit == Suit::Hearts)
-        strtype = "Hearts";
-    else if (suit == Suit::Diamonds)
-        strtype = "Diamonds";
-    else if (suit == Suit::None)
-        strtype = "None";
-    else if (suit == Suit::Error)
-        strtype = "Error";
-    else
-        strtype = "Unknown";
+    switch (suit)
+    {
+        case Suit::Spades:
+            strtype = "Spades";
+            break;
+        case Suit::Clubs:
+            strtype = "Clubs";
+            break;
+        case Suit::Hearts:
+            strtype = "Hearts";
+            break;
+        case Suit::Diamonds:
+            strtype = "Diamonds";
+            break;
+        case Suit::None:
+            strtype = "None";
+            break;
+        case Suit::Error:
+            strtype = "Error";
+            break;
+        default:
+            strtype = "Unknown";
+    }
     return strtype;
 }
 bool ClassicCard::checkAce()
@@ -75,32 +102,50 @@ bool ClassicCard::checkAce()
 int ClassicCard::getValue() const
 {
     int inttype;
-    if (type == ClassicType::None)
-        inttype = 0;
-    else if (type == ClassicType::Two)
-        inttype = 2;
-    else if (type == ClassicType::Three)
-        inttype = 3;
-    else if (type == ClassicType::Four)
-        inttype = 4;
-    else if (type == ClassicType::Five)
-        inttype = 5;
-    else if (type == ClassicType::Six)
-        inttype = 6;
-    else if (type == ClassicType::Seven)
-        inttype = 7;
-    else if (type == ClassicType::Eight)
-        inttype = 8;
-    else if (type == ClassicType::Nine)
-        inttype = 9;
-    else if (type == ClassicType::Ten || type == ClassicType::Jack || type == ClassicType::Queen || type == ClassicType::King)
-        inttype = 10;
-    else if (type == ClassicType::Ace)
-        inttype = 11;
-    else if (type == ClassicType::Error)
-        inttype = 12;
+    switch (type)
+    {
+        case ClassicType::None:
+            inttype = 0;
+            break;
+        case ClassicType::Two:
+            inttype = 2;
+            break;
+        case ClassicType::Three:
+            inttype = 3;
+            break;
+        case ClassicType::Four:
+            inttype = 4;
+            break;
+        case ClassicType::Five:
+            inttype = 5;
+            break;
+        case ClassicType::Six:
+            inttype = 6;
+            break;
+        case ClassicType::Seven:
+            inttype = 7;
+            break;
+        case ClassicType::Eight:
+            inttype = 8;
+            break;
+        case ClassicType::Nine:
+            inttype = 9;
+            break;
+        case ClassicType::Ten: case ClassicType::Jack: case ClassicType::Queen: case ClassicType::King:
+            inttype = 10;
+            break;
+        case ClassicType::Ace:
+            inttype = 11;
+            break;
+        case ClassicType::Error:
+            inttype = 12;
+            break;
+        default:
+            inttype = -1;
+    }
     return inttype;
 }
+
 std::ostream &operator<<(std::ostream &os, const ClassicCard &ncard)
 {
     std::cout << ncard.getType() << " of " << ncard.getSuit() << " ";

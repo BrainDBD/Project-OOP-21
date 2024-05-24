@@ -4,7 +4,8 @@ ClassicDeck::ClassicDeck(const std::vector<AnyCard*> &cards_) : ClassicCardConta
 ClassicDeck::ClassicDeck(const ClassicDeck &other) : ClassicCardContainer(other) {}
 ClassicDeck::ClassicDeck(ClassicDeck&& other) noexcept : ClassicCardContainer()
 {
-    cards = std::move(other.cards);
+    cards.swap(other.cards);
+    //cards = std::move(other.cards);
     other.cards.clear();
 }
 void ClassicDeck::createDeck()
