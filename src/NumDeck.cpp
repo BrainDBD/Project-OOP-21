@@ -2,6 +2,11 @@
 
 NumDeck::NumDeck(const std::vector<AnyCard*> &cards_) : NumCardContainer(cards_) {}
 NumDeck::NumDeck(const NumDeck &other) : NumCardContainer(other) {}
+NumDeck::NumDeck(NumDeck&& other) noexcept : NumCardContainer()
+{
+    cards = std::move(other.cards);
+    other.cards.clear();
+}
 void NumDeck::createDeck()
 {
     for (int type = static_cast<int>(NumType::One); type <= static_cast<int>(NumType::Eleven); ++type)
@@ -47,6 +52,20 @@ NumDeck &NumDeck::operator=(const NumDeck &other)
 {
     for (unsigned int i = 0; i < other.cards.size(); i++)
         cards[i] = other.cards[i];
+    return *this;
+}
+NumDeck &NumDeck::operator=(NumDeck&& other) noexcept
+{
+    if (this != &other)
+    {
+        for (auto& card : cards)
+        {
+            delete card;
+        }
+        cards.clear();
+        cards = std::move(other.cards);
+        other.cards.clear();
+    }
     return *this;
 }
 void NumDeck::Afisare(std::ostream &os)

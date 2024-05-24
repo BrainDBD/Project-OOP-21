@@ -2,6 +2,11 @@
 
 TrumpDeck::TrumpDeck(const std::vector<AnyCard*> &cards_) : TrumpCardContainer(cards_) {}
 TrumpDeck::TrumpDeck(const TrumpDeck &other) : TrumpCardContainer(other) {}
+TrumpDeck::TrumpDeck(TrumpDeck&& other) noexcept : TrumpCardContainer()
+{
+    cards = std::move(other.cards);
+    other.cards.clear();
+}
 void TrumpDeck::removefromDeck(TrumpCard tcard_)
 {
     for (unsigned int i = 0; i < cards.size(); i++)
@@ -71,6 +76,20 @@ TrumpDeck &TrumpDeck::operator=(const TrumpDeck &other)
 {
     for (unsigned int i = 0; i < other.cards.size(); i++)
         cards[i] = other.cards[i];
+    return *this;
+}
+TrumpDeck &TrumpDeck::operator=(TrumpDeck&& other) noexcept
+{
+    if (this != &other)
+    {
+        for (auto& card : cards)
+        {
+            delete card;
+        }
+        cards.clear();
+        cards = std::move(other.cards);
+        other.cards.clear();
+    }
     return *this;
 }
 TrumpDeck::~TrumpDeck() = default;

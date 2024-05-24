@@ -1,324 +1,248 @@
 #include "../include/ClassicGame.h"
 
-ClassicGame::ClassicGame(std::vector<ClassicPlayer> &players_, ClassicDeck maindeck_) : players{players_}, maindeck{maindeck_} {}
-ClassicGame::ClassicGame(const ClassicGame &other) : players{other.players}, maindeck{other.maindeck} {};
-void ClassicGame::Match()
+ClassicGame::ClassicGame(int playercount_, std::vector<ClassicPlayer> &players_, ClassicDeck maindeck_) : playercount{playercount_}, players{players_}, maindeck{maindeck_} {}
+ClassicGame::ClassicGame(const ClassicGame &other) : playercount{other.playercount}, players{other.players}, maindeck{other.maindeck} {};
+bool ClassicGame::isGameOver(int targetscore)
 {
-    bool gaming = true;
-    bool ok;
-    int round = 1;
-    int bet1, bet2;
-    int staying = 0;
-    int choice;
-    int target = 21;
-    while (gaming && players[0].getScore() > 0 && players[1].getScore() > 0)
+    bool ok = false;
+    int i = 0;
+    int p = 0;
+    while (!ok && i < playercount)
     {
-        std::cout << "\n\n"
-                    << "Round " << round << " begins."
-                    << "\n\n";
-        std::cout << players[0].getName() << "'s Score: " << players[0].getScore() << '\n';
-        std::cout << players[1].getName() << "'s Score: " << players[1].getScore()
-                    << "\n\n";
-        players[0].clearHand();
-        players[0].resetPoints();
-        players[1].clearHand();
-        players[1].resetPoints();
-        ClassicDeck rounddeck = maindeck;
-        rounddeck.shuffleDeck();
-        staying = 0;
-        target = 21;
-        bet1 = 50;
-        bet2 = 50;
-        ClassicCard hitcard = rounddeck.dealCard();
-        players[0].addToHand(hitcard);
-        players[0].addtoPoints(hitcard.getValue());
-        std::cout << players[0].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card." << '\n';
-        hitcard = rounddeck.dealCard();
-        players[0].addToHand(hitcard);
-        players[0].addtoPoints(hitcard.getValue());
-        std::cout << players[0].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card." << '\n'
-                    << '\n';
-        hitcard = rounddeck.dealCard();
-        players[1].addToHand(hitcard);
-        players[1].addtoPoints(hitcard.getValue());
-        std::cout << players[1].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card." << '\n';
-        hitcard = rounddeck.dealCard();
-        players[1].addToHand(hitcard);
-        players[1].addtoPoints(hitcard.getValue());
-        std::cout << players[1].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card." << '\n';
-        while (staying < 2)
+        int aux = players[i].getScore();
+        if (aux >= targetscore)
         {
-            std::cout << '\n'
-                        << players[0].getName() << ", it's your turn."
-                        << "\n\n";
-            if (bet1 < players[0].getScore())
-            {
-                std::cout << "Do you want to increase the bet? Yes[1], No[0] ";
-                ok = false;
-                while (!ok)
-                {   
-                    ok = true;
-                    try
-                    {
-                        if (!(std::cin >> choice))
-                        {
-                            ok = false;
-                            throw std::invalid_argument("Invalid input. Not an integer.");
-                        }
-                        if (choice != 0 && choice != 1)
-                        {
-                            ok = false;
-                            throw InvalidChoice("Invalid input. Choose Yes[1] or No[0] ");
-                        }
-                    }
-                    catch (const AnyException &e)
-                    {
-                        std::cerr << e.what() << '\n';
-                    }
-                    catch (const std::invalid_argument &e)
-                    {
-                        std::cerr << e.what() << '\n';
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    }
-                }
-                if (choice == 1)
-                    increaseBet(bet1, players[0].getScore());
-                std::cout << "\n"
-                            << "Available actions: Stay[0], Hit[1], Show Hands[2]"
-                            << "\n\n";
-                std::cin >> choice;
-                while (choice != 0 && choice != 1 && choice != 2)
-                {
-                    std::cout << "Invalid input. Available actions: Stay[0], Hit[1], Show Hands[2] ";
-                    std::cin >> choice;
-                }
-                std::cout << '\n';
-            }
-            if (choice == 2)
-                showHand(0, choice);
-            if (choice == 1)
-            {
-                hitcard = rounddeck.dealCard();
-                if (hitcard.getValue() == 12)
-                {
-                    std::cout << "No more cards in the deck!"
-                                << "\n\n";
-                    if (staying < 2)
-                        staying++;
-                }
-                else
-                {
-                    players[0].addToHand(hitcard);
-                    players[0].addtoPoints(hitcard.getValue());
-                    std::cout << players[0].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card."
-                                << "\n\n";
-                    if (staying > 0)
-                        staying--;
-                }
-            }
-            else if (choice == 0)
-            {
-                if (staying < 2)
-                    staying++;
-            }
-            else
-            {
-                gaming = false;
-                break;
-            }
-            std::cout << players[1].getName() << ", it's your turn."
-                        << "\n\n";
-            if (bet2 < players[1].getScore())
-            {
-                std::cout << "Do you want to increase the bet? Yes[1], No[0] ";
-                ok = false;
-                while (!ok)
-                {   
-                    ok = true;
-                    try
-                    {
-                        if (!(std::cin >> choice))
-                        {
-                            ok = false;
-                            throw std::invalid_argument("Invalid input. Not an integer.");
-                        }
-                        if (choice != 0 && choice != 1)
-                        {
-                            ok = false;
-                            throw InvalidChoice("Invalid input. Choose Yes[1] or No[0] ");
-                        }
-                    }
-                    catch (const AnyException &e)
-                    {
-                        std::cerr << e.what() << '\n';
-                    }
-                    catch (const std::invalid_argument &e)
-                    {
-                        std::cerr << e.what() << '\n';
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    }
-                }
-                if (choice == 1)
-                    increaseBet(bet2, players[1].getScore());
-                std::cout << "\n"
-                            << "Available actions: Stay[0], Hit[1], Show Hands[2]"
-                            << "\n\n";
-                std::cin >> choice;
-                while (choice != 0 && choice != 1 && choice != 2)
-                {
-                    std::cout << "Invalid input. Available actions: Stay[0], Hit[1], Show Hands[2] ";
-                    std::cin >> choice;
-                }
-                std::cout << '\n';
-            }
-            if (choice == 2)
-                showHand(1, choice);
-            if (choice == 1)
-            {
-                hitcard = rounddeck.dealCard();
-                if (hitcard.getValue() == 12)
-                {
-                    std::cout << "No more cards in the deck!"
-                                << "\n\n";
-                    if (staying < 2)
-                        staying++;
-                }
-                else
-                {
-                    players[1].addToHand(hitcard);
-                    players[1].addtoPoints(hitcard.getValue());
-                    std::cout << players[1].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card."
-                                << "\n\n";
-                    if (staying > 0)
-                        staying--;
-                }
-            }
-            else if (choice == 0)
-            {
-                if (staying < 2)
-                    staying++;
-            }
-            else
-            {
-                gaming = false;
-                break;
-            }
+            ok = true;
+            break;
         }
-        int s1, s2;
-        s1 = players[0].calculatePoints();
-        s2 = players[1].calculatePoints();
-        std::cout << players[0].getName() << " has " << s1 << " total points, while " << players[1].getName() << " has " << s2 << " total points"
-                    << "\n\n";
-        if (s1 > s2 && s1 <= target)
-        {
-            std::cout << players[0].getName() << " wins this round!"
-                        << "\n\n";
-            players[0].increaseScore(bet1);
-            players[1].decreaseScore(bet2);
-        }
-        else if (s2 > target && s1 <= target)
-        {
-            std::cout << players[0].getName() << " wins this round!"
-                        << "\n\n";
-            players[0].increaseScore(bet1);
-            players[1].decreaseScore(bet2);
-        }
-        else if (s2 > target && s1 > target && s1 < s2)
-        {
-            std::cout << players[0].getName() << " wins this round!"
-                        << "\n\n";
-            players[0].increaseScore(bet1);
-            players[1].decreaseScore(bet2);
-        }
-        else if (s1 == s2)
-        {
-            std::cout << "It's a draw!"
-                        << "\n\n";
-        }
-        else
-        {
-            std::cout << players[1].getName() << " wins this round!"
-                        << "\n\n";
-            players[0].decreaseScore(bet1);
-            players[1].increaseScore(bet2);
-        }
-        if (players[0].getScore() > 0 && players[1].getScore() > 0)
-        {
-            std::cout << "Continue? Yes[1], No[0] ";
-            bool ok = false;
-            while (!ok)
-            {   
-                ok = true;
-                try
-                {
-                    if (!(std::cin >> choice))
-                    {
-                        ok = false;
-                        throw std::invalid_argument("Invalid input. Not an integer.");
-                    }
-                    if (choice != 0 && choice != 1)
-                    {
-                        ok = false;
-                        throw InvalidChoice("Invalid input. Choose Yes[1] or No[0] ");
-                    }
-                }
-                catch (const AnyException &e)
-                {
-                    std::cerr << e.what() << '\n';
-                }
-                catch (const std::invalid_argument &e)
-                {
-                    std::cerr << e.what() << '\n';
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                }
-            }
-            if (choice == 0)
-                gaming = 0;
-        }
-        round++;
+        if(aux <= 0)
+            p++;
+        i++;
     }
-    std::cout << '\n';
-    if (players[0].getScore() > players[1].getScore())
-        std::cout << players[0].getName() << " wins the match!"
-                    << "\n\n";
-    else if (players[0].getScore() < players[1].getScore())
-        std::cout << players[1].getName() << " wins the match!"
-                    << "\n\n";
-    else
-        std::cout << "It's a tie!"
-                    << "\n\n";
+    if(p == playercount)
+        ok = true;
+    return ok;
+}
+void ClassicGame::assignDealer()
+{
+    for (int i=0; i<playercount; i++)
+    {
+        players[i].setRole(Role::Player);
+    }
+    ClassicPlayer dealer = {"Dealer",0,2000,0,{},Role::Dealer};
+    players.push_back(dealer);
+}
+void ClassicGame::DisplayScores()
+{
+    for (int i = 0; i < playercount; i++)
+        std::cout << players[i].getName() << "'s Score: " << players[i].getScore() << '\n';
+    std::cout << "\n\n";
+}
+void ClassicGame::CleanUp()
+{
+    for (int i = 0; i <= playercount; i++)
+    {
+        players[i].clearHand();
+        players[i].resetPoints();
+    }
+}
+void ClassicGame::BettingTime()
+{
+    for (int i = 0; i < playercount; i++)
+        players[i].Bet();
+}
+void ClassicGame::Turn(int i, ClassicDeck &gamedeck)
+{
+    std::cout << '\n'
+                << players[i].getName() << ", it's your turn."
+                << "\n\n";
+    bool staying = false;
+    int choice;
+    while (!staying && players[i].calculatePoints() <= 21)
+    {
+        std::cout << "Available actions: Stay[0], Hit[1], Show Hands[2], Show Dealer's Hand[3] ";
+        std::cin >> choice;
+        while (choice != 0 && choice != 1 && choice != 2 && choice != 3)
+        {
+            std::cout << "Invalid input. Available actions: Stay[0], Hit[1], Show Hands[2], Show Dealer's Hand[3] ";
+            std::cin >> choice;
+        }
+        std::cout << '\n';
+        if (choice == 3)
+            showDealerHand(i, choice);
+        if (choice == 2)
+            showHand(i, choice);
+        if (choice == 1)
+        {
+            ClassicCard hitcard = gamedeck.dealCard();
+            players[i].addToHand(hitcard);
+            players[i].addtoPoints(hitcard.getValue());
+            std::cout << players[i].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card."
+                        << "\n";
+        }
+        else if (choice == 0)
+            staying = true;
+    }
 }
 void ClassicGame::showHand(int playernumber, int &choice)
 {
     std::cout << "Your current hand: ";
     players[playernumber].showHand();
-    std::cout << players[1].getName() << "'s current hand: ";
-    players[abs(playernumber - 1)].showHand();
     std::cout << "\n\n";
-    std::cout << "Available actions: Stay[0], Hit[1]"
+    std::cout << "Available actions: Stay[0], Hit[1], Show Dealer's Hand[3]"
                 << "\n\n";
-    std::cin >> choice;
-    while (choice != 0 && choice != 1)
-    {
-        std::cout << "Invalid input. Available actions: Stay[0], Hit[1]";
-        std::cin >> choice;
+    choice = -1;
+    bool ok = false;
+    while (!ok)
+    {   
+        ok = true;
+        try
+        {
+            if (!(std::cin >> choice))
+            {
+                ok = false;
+                throw std::invalid_argument("Invalid input. Not an integer.");
+            }
+            if (choice != 0 && choice != 1 && choice != 3)
+            {
+                ok = false;
+                throw InvalidChoice("Invalid input. Available actions: Stay[0], Hit[1], Show Dealer's Hand[3]");
+            }
+        }
+        catch (const AnyException &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        catch (const std::invalid_argument &e)
+        {
+            std::cerr << e.what() << '\n';
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
     }
     std::cout << '\n';
+    if (choice == 3)
+        showDealerHand(playernumber, choice);
 }
-void ClassicGame::increaseBet(int &Betsy, int Score)
+void ClassicGame::showDealerHand(int playernumber,int &choice)
 {
-    std::cout << "What's your new bet? ";
-    int s;
-    std::cin >> s;
-    while (s > Score && s <= Betsy)
+std::cout << "Dealer's hand: ";
+players[playercount].showDealerHand();
+std::cout << "Available actions: Stay[0], Hit[1], Show Hand[2]"
+            << "\n\n";
+choice = -1;
+bool ok = false;
+while (!ok)
+{   
+    ok = true;
+    try
     {
-        std::cout << "Invalid input. Your new bet must not be higher than your total credits. Try again. ";
-        std::cin >> s;
+        if (!(std::cin >> choice))
+        {
+            ok = false;
+            throw std::invalid_argument("Invalid input. Not an integer.");
+        }
+        if (choice != 0 && choice != 1 && choice != 2)
+        {
+            ok = false;
+            throw InvalidChoice("Invalid input. Available actions: Stay[0], Hit[1], Show Hands[2]");
+        }
     }
-    Betsy = s;
+    catch (const AnyException &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    catch (const std::invalid_argument &e)
+    {
+        std::cerr << e.what() << '\n';
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
+std::cout << '\n';
+if (choice == 2)
+    showHand(playernumber, choice);
+}
+
+void ClassicGame::Match(int targetscore)
+{
+    bool gaming = true;
+    bool ok;
+    int round = 1;
+    int staying = 0;
+    int choice;
+    int target = 21;
+    ClassicDeck rounddeck = maindeck;
+    assignDealer();
+    while (!isGameOver(targetscore) && gaming)
+    {
+        std::cout << "\n\n"
+                    << "Round " << round << " begins."
+                    << "\n\n";
+        DisplayScores();
+        CleanUp();
+        rounddeck.shuffleDeck();
+        staying = 0;
+        target = 21;
+        BettingTime();
+        ClassicCard hitcard;
+        for (int i = 0; i < playercount; i++)
+        {
+            if(players[i].getScore() > 0)
+                for (int k = 0; k < 2; k++)
+                {
+                    hitcard = rounddeck.dealCard();
+                    players[i].addToHand(hitcard);
+                    players[i].addtoPoints(hitcard.getValue());
+                    std::cout << players[i].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card." << '\n'
+                                << '\n';
+                }
+        }
+        for(int k = 0; k < 2; k++)
+        {
+                hitcard = rounddeck.dealCard();
+                players[playercount].addToHand(hitcard);
+                players[playercount].addtoPoints(hitcard.getValue());
+        }
+        for (int i = 0; i < playercount; i++)
+            if(players[i].getScore() > 0)
+                Turn(i,rounddeck);
+        while(players[playercount].calculatePoints() < 17)
+        {
+                hitcard = rounddeck.dealCard();
+                players[playercount].addToHand(hitcard);
+                players[playercount].addtoPoints(hitcard.getValue());                
+        }
+        std::cout<<"Dealer's hand: ";
+        players[playercount].showHand();
+        for(int i = 0; i < playercount; i++)
+            if(players[i].getScore() > 0)
+            {
+                std::cout << players[i].getName() << " has " << players[i].calculatePoints() << " total points, while " << players[playercount].getName() << " has " << players[playercount].calculatePoints() << " total points"
+                        << "\n\n";
+                if(players[playercount].calculatePoints() > 21)
+                {
+                    std::cout<<players[i].getName()<<" wins."<<'\n';
+                    players[i].increaseScore(players[i].getBet());
+                }                      
+                else if(players[i].calculatePoints() <= 21 && players[i].calculatePoints() > players[playercount].calculatePoints())
+                {
+                    std::cout<<players[i].getName()<<" wins."<<'\n';
+                    players[i].increaseScore(players[i].getBet());
+                } 
+                else if(players[i].calculatePoints() < players[playercount].calculatePoints())       
+                {
+                    std::cout<<players[i].getName()<<" loses."<<'\n';
+                    players[i].decreaseScore(players[i].getBet());                    
+                }    
+                else std::cout<<players[i].getName()<<" is tied with the Dealer"<<'\n';
+            }
+        round++;
+    }
+    std::cout << '\n';
+    for(int i = 0; i < playercount; i++)
+        if(players[i].getScore()>2000)
+            std::cout<<players[i].getName()<<" is a winner!"<<'\n';
 }
 ClassicGame &ClassicGame::operator=(const ClassicGame &other)
 {

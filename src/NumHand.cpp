@@ -2,6 +2,11 @@
 
 NumHand::NumHand(const std::vector<AnyCard*> &cards_) : NumCardContainer(cards_) {}
 NumHand::NumHand(const NumHand &other) : NumCardContainer(other) {}
+NumHand::NumHand(NumHand&& other) noexcept : NumCardContainer()
+{
+    cards = std::move(other.cards);
+    other.cards.clear();
+}
 void NumHand::addToDeck(const NumCard &card_) { cards.push_back(new NumCard(card_)); }
 NumCard NumHand::lastCard()
 {
@@ -21,6 +26,20 @@ NumHand &NumHand::operator=(const NumHand &other)
 {
     for (unsigned int i = 0; i < other.cards.size(); i++)
         cards[i] = other.cards[i];
+    return *this;
+}
+NumHand &NumHand::operator=(NumHand&& other) noexcept
+{
+    if (this != &other)
+    {
+        for (auto& card : cards)
+        {
+            delete card;
+        }
+        cards.clear();
+        cards = std::move(other.cards);
+        other.cards.clear();
+    }
     return *this;
 }
 void NumHand::Afisare(std::ostream &os)

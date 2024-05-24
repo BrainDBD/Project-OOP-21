@@ -2,6 +2,11 @@
 
 ClassicDeck::ClassicDeck(const std::vector<AnyCard*> &cards_) : ClassicCardContainer(cards_) {}
 ClassicDeck::ClassicDeck(const ClassicDeck &other) : ClassicCardContainer(other) {}
+ClassicDeck::ClassicDeck(ClassicDeck&& other) noexcept : ClassicCardContainer()
+{
+    cards = std::move(other.cards);
+    other.cards.clear();
+}
 void ClassicDeck::createDeck()
 {
     for (int type = static_cast<int>(ClassicType::Two); type <= static_cast<int>(ClassicType::King); ++type)
@@ -54,6 +59,20 @@ ClassicDeck &ClassicDeck::operator=(const ClassicDeck &other)
 {
     for (unsigned int i = 0; i < other.cards.size(); i++)
         cards[i] = other.cards[i];
+    return *this;
+}
+ClassicDeck &ClassicDeck::operator=(ClassicDeck&& other) noexcept
+{
+    if (this != &other)
+    {
+        for (auto& card : cards)
+        {
+            delete card;
+        }
+        cards.clear();
+        cards = std::move(other.cards);
+        other.cards.clear();
+    }
     return *this;
 }
 void ClassicDeck::Afisare(std::ostream &os)

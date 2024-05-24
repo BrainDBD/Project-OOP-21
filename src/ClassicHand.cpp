@@ -2,7 +2,21 @@
 
 ClassicHand::ClassicHand(const std::vector<AnyCard*> &cards_) : ClassicCardContainer(cards_) {}
 ClassicHand::ClassicHand(const ClassicHand &other) : ClassicCardContainer(other.cards) {}
+ClassicHand::ClassicHand(ClassicHand&& other) noexcept : ClassicCardContainer()
+{
+    cards = std::move(other.cards);
+    other.cards.clear();
+}
 void ClassicHand::addToDeck(const ClassicCard &card_) { cards.push_back(new ClassicCard(card_)); }
+void ClassicHand::getDealerHand()
+{
+    for (unsigned int i = 0; i < cards.size(); i++)
+        if(i != 1)
+            std::cout << *dynamic_cast<ClassicCard*>(cards[i]) << " ";
+        else
+            std::cout<<"[[Face-Down Card]]";
+    std::cout << '\n';         
+}
 ClassicCard ClassicHand::lastCard()
 {
     ClassicCard lastcard = *dynamic_cast<ClassicCard*>(cards.back());
@@ -20,10 +34,10 @@ void ClassicHand::exchange(ClassicHand &other)
 int ClassicHand::getnAces()
 {
     int n = 0;
-    for (auto newfullCard = cards.begin(); newfullCard != cards.end(); ++newfullCard)
+    for (auto newclassicCard = cards.begin(); newclassicCard != cards.end(); ++newclassicCard)
     {
-        ClassicCard* fullCard = dynamic_cast<ClassicCard*>(*newfullCard);
-        if (fullCard->checkAce() == 1)
+        ClassicCard* classicCard = dynamic_cast<ClassicCard*>(*newclassicCard);
+        if (classicCard->checkAce() == 1)
             n++;
     }
     return n;
@@ -34,10 +48,24 @@ ClassicHand &ClassicHand::operator=(const ClassicHand &other)
         cards[i] = other.cards[i];
     return *this;
 }
+ClassicHand &ClassicHand::operator=(ClassicHand&& other) noexcept
+{
+    if (this != &other)
+    {
+        for (auto& card : cards)
+        {
+            delete card;
+        }
+        cards.clear();
+        cards = std::move(other.cards);
+        other.cards.clear();
+    }
+    return *this;
+}
 void ClassicHand::Afisare(std::ostream &os)
 {
     for (unsigned int i = 0; i < cards.size(); i++)
-        std::cout << cards[i] << " (" << dynamic_cast<ClassicCard *>(cards[i])->getValue() << ")";
+        std::cout << cards[i] << " (" << dynamic_cast<ClassicCard*>(cards[i])->getValue() << ")";
     std::cout << '\n';
 }
 ClassicHand::~ClassicHand() = default;

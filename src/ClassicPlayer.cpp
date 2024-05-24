@@ -1,18 +1,56 @@
 #include "../include/ClassicPlayer.h"
 
-ClassicPlayer::ClassicPlayer(std::string name_, int points_, int score_, ClassicHand hand_) : StarterPlayer(name_, points_, score_), hand{hand_} {}
+ClassicPlayer::ClassicPlayer(std::string name_, int points_, int score_, int bet_, ClassicHand hand_, Role role_) : StarterPlayer(name_, points_, score_), hand{hand_}, bet{bet_}, role{role_} {}
 ClassicPlayer::ClassicPlayer(const ClassicPlayer &other) : StarterPlayer(other), hand{other.hand} {}
+Role ClassicPlayer::getRole() { return role; }
+void ClassicPlayer::setRole(Role newRole) { role = newRole; }
+int ClassicPlayer::getBet() { return bet; }
+void ClassicPlayer::Bet()
+{
+    std::cout << getName() <<", how much do you wanna bet? ";
+    int choice;
+    bool ok = false;
+    while (!ok)
+    {
+        ok = true;
+        try
+        {
+            if (!(std::cin >> choice))
+            {
+                ok = false;
+                throw std::invalid_argument("Invalid input. Not an integer.");
+            }
+            if (choice > score)
+            {
+                ok = false;
+                throw InvalidBet();
+            }
+            if (choice < 1)
+            {
+                ok = false;
+                throw std::invalid_argument("Invalid input. Your best must be at least $1");
+            }
+        }
+        catch (const AnyException &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        catch (const std::invalid_argument &e)
+        {
+            std::cerr << e.what() << '\n';
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+    std::cout<<'\n';
+    bet = choice;
+}
 void ClassicPlayer::showHand() { std::cout << hand << calculatePoints() << '\n'; }
+void ClassicPlayer::showDealerHand() { hand.getDealerHand(); }
 int ClassicPlayer::HandSize()
 {
     int s = hand.DeckSize();
     return s;
-}
-void ClassicPlayer::showhiddenHand()
-{
-    for (int i = 0; i < hand.DeckSize(); i++)
-        std::cout << "## ";
-    std::cout << '\n';
 }
 void ClassicPlayer::addToHand(ClassicCard card_) { hand.addToDeck(card_); }
 void ClassicPlayer::exchangeHands(ClassicPlayer &other) { hand.exchange(other.hand); }
