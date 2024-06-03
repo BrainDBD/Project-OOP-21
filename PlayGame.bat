@@ -20,8 +20,9 @@ g++ -c -o obj/TrumpPlayer.o src/TrumpPlayer.cpp
 g++ -c -o obj/NumGame.o src/NumGame.cpp
 g++ -c -o obj/ClassicGame.o src/ClassicGame.cpp
 g++ -c -o obj/TrumpGame.o src/TrumpGame.cpp
+g++ -c -o obj/GameMaster.o src/GameMaster.cpp
 g++ -c -o obj/main.o main.cpp
-g++ -o main obj/main.o obj/NumCard.o obj/ClassicCard.o obj/TrumpCard.o obj/BasicCardContainer.o obj/NumCardContainer.o obj/ClassicCardContainer.o obj/TrumpCardContainer.o obj/NumDeck.o obj/ClassicDeck.o obj/TrumpDeck.o obj/NumHand.o obj/ClassicHand.o obj/TrumpHand.o obj/StarterPlayer.o obj/NumPlayer.o obj/ClassicPlayer.o obj/TrumpPlayer.o obj/NumGame.o obj/ClassicGame.o obj/TrumpGame.o
+g++ -o main obj/main.o obj/NumCard.o obj/ClassicCard.o obj/TrumpCard.o obj/BasicCardContainer.o obj/NumCardContainer.o obj/ClassicCardContainer.o obj/TrumpCardContainer.o obj/NumDeck.o obj/ClassicDeck.o obj/TrumpDeck.o obj/NumHand.o obj/ClassicHand.o obj/TrumpHand.o obj/StarterPlayer.o obj/NumPlayer.o obj/ClassicPlayer.o obj/TrumpPlayer.o obj/NumGame.o obj/ClassicGame.o obj/TrumpGame.o obj/GameMaster.o
 main.exe
 cd obj 
 del NumCard.o
@@ -44,6 +45,7 @@ del TrumpPlayer.o
 del NumGame.o
 del ClassicGame.o
 del TrumpGame.o
+del GameMaster.o
 del main.o
 cd .. 
 rmdir obj

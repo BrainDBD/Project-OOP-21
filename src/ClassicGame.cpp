@@ -243,14 +243,19 @@ void ClassicGame::Match(int targetscore)
             {
                 std::cout << players[i].getName() << " has " << players[i].calculatePoints() << " total points, while " << players[playercount].getName() << " has " << players[playercount].calculatePoints() << " total points"
                           << "\n\n";
-                if (players[playercount].calculatePoints() > 21)
+                if (players[playercount].calculatePoints() > 21 && players[i].calculatePoints() > 21 && players[playercount].calculatePoints() > players[i].calculatePoints())
                 {
                     std::cout << players[i].getName() << " wins." << '\n';
                     players[i].increaseScore(players[i].getBet());
                 }
-                else if (players[i].calculatePoints() <= 21 && players[i].calculatePoints() > players[playercount].calculatePoints())
+                else if (players[playercount].calculatePoints() > 21 && players[i].calculatePoints() <= 21 )
                 {
                     std::cout << players[i].getName() << " wins." << '\n';
+                    players[i].increaseScore(players[i].getBet());
+                }
+                else if (players[i].calculatePoints() > 21 && players[playercount].calculatePoints() <= 21)
+                {
+                    std::cout << players[i].getName() << " loses." << '\n';
                     players[i].increaseScore(players[i].getBet());
                 }
                 else if (players[i].calculatePoints() < players[playercount].calculatePoints())

@@ -8,12 +8,10 @@ class AnyException : public std::exception
 {
 public:
     AnyException(const char *message) noexcept : message(message) {}
-
     const char *what() const noexcept override
     {
         return message.c_str();
     }
-
 private:
     const std::string message;
 };

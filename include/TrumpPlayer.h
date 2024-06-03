@@ -12,7 +12,6 @@ private:
     NumHand hand;
     TrumpHand trumphand;
 public:
-    TrumpPlayer() = default;
     TrumpPlayer(const std::string name_ = "Hoffman", int points_ = 0, int score_ = 0, const NumHand hand_ = {}, const TrumpHand trumphand_ = {});
     TrumpPlayer(const TrumpPlayer &other);
     std::string getName() const;

@@ -1,5 +1,6 @@
 #ifndef FULLCARD_H_
 #define FULLCARD_H_
+
 #include "AnyCard.h"
 #include "./enums/ClassicType.h"
 

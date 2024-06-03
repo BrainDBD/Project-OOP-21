@@ -10,7 +10,6 @@ class BasicCardContainer
 {
 protected:
     std::vector<AnyCard*> cards;
-
 public:
     BasicCardContainer(const std::vector<AnyCard*> &cards_ = {});
     virtual int DeckSize() = 0;

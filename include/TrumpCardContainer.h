@@ -8,7 +8,6 @@ class TrumpCardContainer : public BasicCardContainer
 {
 protected:
     TrumpCardContainer(const std::vector<AnyCard*> &cards_ = {});
-
 public:
     int DeckSize();
     void emptyDeck();

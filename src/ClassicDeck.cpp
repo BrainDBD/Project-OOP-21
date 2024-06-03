@@ -4,22 +4,21 @@ ClassicDeck::ClassicDeck(const std::vector<AnyCard*> &cards_) : ClassicCardConta
 ClassicDeck::ClassicDeck(const ClassicDeck &other) : ClassicCardContainer(other) {}
 ClassicDeck::ClassicDeck(ClassicDeck&& other) noexcept : ClassicCardContainer()
 {
-    cards.swap(other.cards);
-    //cards = std::move(other.cards);
+    //cards.swap(other.cards);
+    cards = std::move(other.cards);
     other.cards.clear();
 }
 void ClassicDeck::createDeck()
 {
-    for (int type = static_cast<int>(ClassicType::Two); type <= static_cast<int>(ClassicType::King); ++type)
-    {
-        for (int suit = static_cast<int>(Suit::Spades); suit <= static_cast<int>(Suit::Diamonds); ++suit)
-        {
-            ClassicType cardType = static_cast<ClassicType>(type);
-            Suit cardSuit = static_cast<Suit>(suit);
-            AnyCard *auxcard = new ClassicCard{cardType,cardSuit};
-            cards.emplace_back(auxcard);
-        }
-    }
+    for(int i = 0; i < 6; i++)
+        for (int type = static_cast<int>(ClassicType::Two); type <= static_cast<int>(ClassicType::King); ++type)
+            for (int suit = static_cast<int>(Suit::Spades); suit <= static_cast<int>(Suit::Diamonds); ++suit)
+            {
+                ClassicType cardType = static_cast<ClassicType>(type);
+                Suit cardSuit = static_cast<Suit>(suit);
+                AnyCard *auxcard = new ClassicCard{cardType,cardSuit};
+                cards.emplace_back(auxcard);
+            }
 }
 void ClassicDeck::shuffleDeck()
 {
@@ -27,9 +26,23 @@ void ClassicDeck::shuffleDeck()
     std::mt19937 g(rd());
     shuffle(cards.begin(), cards.end(), g);
 }
+bool ClassicDeck::lowCards()
+{
+    if (cards.size() <= 75)
+        return 1;
+    return 0;
+}
 ClassicCard ClassicDeck::dealCard()
 {
-    if (!cards.empty())
+        if (lowCards())
+        {
+            createDeck();
+            shuffleDeck();
+        }
+        ClassicCard dealtcard = *dynamic_cast<ClassicCard *>(cards.back());
+        cards.pop_back();
+        return dealtcard;    
+    /* if (!cards.empty())
     {
         ClassicCard dealtcard = *dynamic_cast<ClassicCard*>(cards.back());
         cards.pop_back();
@@ -39,7 +52,7 @@ ClassicCard ClassicDeck::dealCard()
     {
         ClassicCard errorcard{ClassicType::Error, Suit::Error};
         return errorcard;
-    }
+    } */
 }
 ClassicCard ClassicDeck::drawCard(ClassicCard card_)
 {

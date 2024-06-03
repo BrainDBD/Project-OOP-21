@@ -1,5 +1,6 @@
 #ifndef FULL_TYPE_H
 #define FULL_TYPE_H
+
 #include "Suit.h"    
 
 enum class ClassicType

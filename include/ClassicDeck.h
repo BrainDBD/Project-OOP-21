@@ -11,6 +11,7 @@ public:
     ClassicDeck(ClassicDeck&& other) noexcept; 
     void createDeck();
     void shuffleDeck();
+    bool lowCards();
     ClassicCard dealCard();
     ClassicCard drawCard(ClassicCard card_);
     ClassicDeck &operator=(const ClassicDeck &other);

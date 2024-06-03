@@ -3,8 +3,9 @@
 
 #include "ClassicPlayer.h"
 #include "ClassicDeck.h"
+#include "Exceptions.h"
 
-class ClassicGame
+class ClassicGame 
 {
 private:
     int playercount;

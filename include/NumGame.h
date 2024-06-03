@@ -5,7 +5,7 @@
 #include "NumDeck.h"
 #include "Exceptions.h"
 
-class NumGame
+class NumGame 
 {
 private:
     std::vector<NumPlayer> players;

@@ -10,7 +10,6 @@ class NumPlayer : public StarterPlayer
 private:
     NumHand hand;
 public:
-    NumPlayer() = default;
     NumPlayer(std::string name_ = "Hoffman", int points_ = 0, int score_ = 0, NumHand hand_ = {});
     NumPlayer(const NumPlayer &other);
     void showHand();

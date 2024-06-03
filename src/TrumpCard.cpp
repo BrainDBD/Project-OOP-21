@@ -127,7 +127,6 @@ std::ostream &operator<<(std::ostream &os, const TrumpCard &tcard)
         default:
             strtype = "Unknown";
     }
-
     os << strtype << " ";
     return os;
 }
