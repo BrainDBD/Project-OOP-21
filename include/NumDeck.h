@@ -9,6 +9,7 @@ public:
     NumDeck(const std::vector<AnyCard*> &cards_ = {});
     NumDeck(const NumDeck &other);
     NumDeck(NumDeck&& other) noexcept; 
+    NumDeck* clone() const;
     void createDeck();
     void shuffleDeck();
     NumCard dealCard();

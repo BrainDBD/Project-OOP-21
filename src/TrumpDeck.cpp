@@ -8,6 +8,10 @@ TrumpDeck::TrumpDeck(TrumpDeck&& other) noexcept : TrumpCardContainer()
     cards = std::move(other.cards);
     other.cards.clear();
 }
+TrumpDeck* TrumpDeck::clone() const
+{
+    return new TrumpDeck(*this);
+}
 void TrumpDeck::removefromDeck(TrumpCard tcard_)
 {
     for (unsigned int i = 0; i < cards.size(); i++)

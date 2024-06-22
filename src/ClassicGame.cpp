@@ -25,10 +25,10 @@ bool ClassicGame::isGameOver(int targetscore)
 }
 void ClassicGame::assignDealer()
 {
-    for (int i = 0; i < playercount; i++)
+    std::for_each(players.begin(), players.end(), [](ClassicPlayer& player)
     {
-        players[i].setRole(Role::Player);
-    }
+        player.setRole(Role::Player);
+    });
     ClassicPlayer dealer = {"Dealer", 0, 2000, 0, {}, Role::Dealer};
     players.push_back(dealer);
 }
@@ -40,11 +40,11 @@ void ClassicGame::DisplayScores()
 }
 void ClassicGame::CleanUp()
 {
-    for (int i = 0; i <= playercount; i++)
+    std::for_each(players.begin(), players.end(), [](ClassicPlayer& player)
     {
-        players[i].clearHand();
-        players[i].resetPoints();
-    }
+        player.clearHand();
+        player.resetPoints();
+    });
 }
 void ClassicGame::BettingTime()
 {
@@ -195,7 +195,7 @@ void ClassicGame::Match(int targetscore)
     int staying = 0;
     int choice;
     int target = 21;
-    ClassicDeck rounddeck = maindeck;
+    ClassicDeck* rounddeck = maindeck.clone();
     assignDealer();
     while (!isGameOver(targetscore) && gaming)
     {
@@ -204,7 +204,7 @@ void ClassicGame::Match(int targetscore)
                   << "\n\n";
         DisplayScores();
         CleanUp();
-        rounddeck.shuffleDeck();
+        rounddeck->shuffleDeck();
         staying = 0;
         target = 21;
         BettingTime();
@@ -214,7 +214,7 @@ void ClassicGame::Match(int targetscore)
             if (players[i].getScore() > 0)
                 for (int k = 0; k < 2; k++)
                 {
-                    hitcard = rounddeck.dealCard();
+                    hitcard = rounddeck->dealCard();
                     players[i].addToHand(hitcard);
                     players[i].addtoPoints(hitcard.getValue());
                     std::cout << players[i].getName() << ", you drew the " << hitcard.getType() << " of " << hitcard.getSuit() << " card." << '\n'
@@ -223,16 +223,16 @@ void ClassicGame::Match(int targetscore)
         }
         for (int k = 0; k < 2; k++)
         {
-            hitcard = rounddeck.dealCard();
+            hitcard = rounddeck->dealCard();
             players[playercount].addToHand(hitcard);
             players[playercount].addtoPoints(hitcard.getValue());
         }
         for (int i = 0; i < playercount; i++)
             if (players[i].getScore() > 0)
-                Turn(i, rounddeck);
+                Turn(i, *rounddeck);
         while (players[playercount].calculatePoints() < 17)
         {
-            hitcard = rounddeck.dealCard();
+            hitcard = rounddeck->dealCard();
             players[playercount].addToHand(hitcard);
             players[playercount].addtoPoints(hitcard.getValue());
         }
@@ -285,9 +285,11 @@ ClassicGame &ClassicGame::operator=(const ClassicGame &other)
 }
 std::ostream &operator<<(std::ostream &os, const ClassicGame &cgame)
 {
-    for (unsigned int i = 0; i < cgame.players.size(); i++)
-        std::cout << cgame.players[i] << " ";
-    std::cout << '\n';
+    for (const auto &player : cgame.players)
+    {
+        os << player << " ";
+    }
+    os << '\n';
     return os;
 }
 ClassicGame::~ClassicGame() = default;

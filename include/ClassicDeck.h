@@ -9,6 +9,7 @@ public:
     ClassicDeck(const std::vector<AnyCard*> &cards_ = {});
     ClassicDeck(const ClassicDeck &other);
     ClassicDeck(ClassicDeck&& other) noexcept; 
+    ClassicDeck* clone() const;
     void createDeck();
     void shuffleDeck();
     bool lowCards();

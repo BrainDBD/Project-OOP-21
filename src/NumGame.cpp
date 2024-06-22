@@ -22,15 +22,15 @@ void NumGame::Match(int targetscore)
         players[0].resetPoints();
         players[1].clearHand();
         players[1].resetPoints();
-        NumDeck rounddeck = maindeck;
-        rounddeck.shuffleDeck();
+        NumDeck* rounddeck = maindeck.clone();
+        rounddeck->shuffleDeck();
         staying = 0;
         target = 21;
-        NumCard hitcard = rounddeck.dealCard();
+        NumCard hitcard = rounddeck->dealCard();
         players[0].addToHand(hitcard);
         players[0].addtoPoints(hitcard.getValue());
         std::cout << players[0].getName() << ", you drew the " << hitcard.getType() << " card." << '\n';
-        hitcard = rounddeck.dealCard();
+        hitcard = rounddeck->dealCard();
         players[1].addToHand(hitcard);
         players[1].addtoPoints(hitcard.getValue());
         std::cout << players[1].getName() << ", you drew the " << hitcard.getType() << " card." << '\n';
@@ -63,7 +63,7 @@ void NumGame::Match(int targetscore)
             }
             if (choice == 1)
             {
-                hitcard = rounddeck.dealCard();
+                hitcard = rounddeck->dealCard();
                 if (hitcard.getValue() == 12)
                 {
                     std::cout << "No more cards in the deck!"
@@ -117,7 +117,7 @@ void NumGame::Match(int targetscore)
             }
             if (choice == 1)
             {
-                hitcard = rounddeck.dealCard();
+                hitcard = rounddeck->dealCard();
                 if (hitcard.getValue() == 12)
                 {
                     std::cout << "No more cards in the deck!"
@@ -238,8 +238,10 @@ NumGame &NumGame::operator=(const NumGame &other)
 }
 std::ostream &operator<<(std::ostream &os, const NumGame &game)
 {
-    for (unsigned int i = 0; i < game.players.size(); i++)
-        std::cout << game.players[i] << " ";
+    std::for_each(game.players.begin(), game.players.end(), [](const auto &player)
+    {
+        std::cout << player << " ";
+    });
     std::cout << '\n';
     return os;
 }

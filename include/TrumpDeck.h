@@ -10,6 +10,7 @@ public:
     TrumpDeck(const std::vector<AnyCard*> &cards_ = {});
     TrumpDeck(const TrumpDeck &other);
     TrumpDeck(TrumpDeck&& other) noexcept; 
+    TrumpDeck* clone() const;
     void removefromDeck(TrumpCard tcard_);
     void createDeck();
     void shuffleDeck();

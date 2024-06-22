@@ -13,8 +13,8 @@ void TrumpGame::Match(int targetscore)
     int target = 21;
     players[0].clearTrumpHand();
     players[1].clearTrumpHand();
-    TrumpDeck roundtdeck = maintdeck;
-    roundtdeck.shuffleDeck();
+    TrumpDeck* roundtdeck = maintdeck.clone();
+    roundtdeck->shuffleDeck();
     while (gaming && players[0].getScore() < targetscore && players[1].getScore() < targetscore)
     {
         std::cout << "\n\n"
@@ -27,30 +27,30 @@ void TrumpGame::Match(int targetscore)
         players[0].resetPoints();
         players[1].clearHand();
         players[1].resetPoints();
-        NumDeck rounddeck = maindeck;
-        rounddeck.shuffleDeck();
+        NumDeck* rounddeck = maindeck.clone();
+        rounddeck->shuffleDeck();
         staying = 0;
         target = 21;
-        NumCard hitcard = rounddeck.dealCard();
+        NumCard hitcard = rounddeck->dealCard();
         players[0].addToHand(hitcard);
         players[0].addtoPoints(hitcard.getValue());
-        if (roundtdeck.checkEmpty() == 1)
+        if (roundtdeck->checkEmpty() == 1)
         {
-            roundtdeck = maintdeck;
-            roundtdeck.shuffleDeck();
+            roundtdeck = maintdeck.clone();
+            roundtdeck->shuffleDeck();
         }
-        TrumpCard hittcard = roundtdeck.dealCard();
+        TrumpCard hittcard = roundtdeck->dealCard();
         players[0].addToTrumpHand(hittcard);
         std::cout << players[0].getName() << ", you drew the " << hitcard.getType() << " card and " << hittcard.getType() << "." << '\n';
-        hitcard = rounddeck.dealCard();
+        hitcard = rounddeck->dealCard();
         players[1].addToHand(hitcard);
         players[1].addtoPoints(hitcard.getValue());
-        if (roundtdeck.checkEmpty() == 1)
+        if (roundtdeck->checkEmpty() == 1)
         {
-            roundtdeck = maintdeck;
-            roundtdeck.shuffleDeck();
+            roundtdeck = maintdeck.clone();
+            roundtdeck->shuffleDeck();
         }
-        hittcard = roundtdeck.dealCard();
+        hittcard = roundtdeck->dealCard();
         players[1].addToTrumpHand(hittcard);
         std::cout << players[1].getName() << ", you drew the " << hitcard.getType() << " card and " << hittcard.getType() << "." << '\n';
         while (staying < 2)
@@ -96,7 +96,7 @@ void TrumpGame::Match(int targetscore)
                 showTrumpHand(0, choice);
             if (choice == 1)
             {
-                hitcard = rounddeck.dealCard();
+                hitcard = rounddeck->dealCard();
                 if (hitcard.getValue() == 12)
                 {
                     std::cout << "No more cards in the deck!"
@@ -164,7 +164,7 @@ void TrumpGame::Match(int targetscore)
                 showTrumpHand(1, choice);
             if (choice == 1)
             {
-                hitcard = rounddeck.dealCard();
+                hitcard = rounddeck->dealCard();
                 if (hitcard.getValue() == 12)
                 {
                     std::cout << "No more cards in the deck!"
@@ -366,9 +366,11 @@ TrumpGame &TrumpGame::operator=(const TrumpGame &other)
 }
 std::ostream &operator<<(std::ostream &os, const TrumpGame &tgame)
 {
-    for (unsigned int i = 0; i < tgame.players.size(); i++)
-        std::cout << tgame.players[i] << " ";
-    std::cout << '\n';
+    std::for_each(tgame.players.begin(), tgame.players.end(), [&os](const TrumpPlayer &player)
+    {
+        os << player << " ";
+    });
+    os << '\n';
     return os;
 }
 TrumpGame::~TrumpGame() = default;

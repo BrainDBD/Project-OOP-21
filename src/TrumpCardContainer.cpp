@@ -9,11 +9,11 @@ int TrumpCardContainer::DeckSize()
 }
 void TrumpCardContainer::emptyDeck()
 {
-    while (!cards.empty())
+    std::for_each(cards.begin(), cards.end(), [](AnyCard* card)
     {
-        TrumpCard dealtcard = *dynamic_cast<TrumpCard*>(cards.back());
-        cards.pop_back();
-    }
+        delete card;
+    });
+    cards.clear();
 }
 void TrumpCardContainer::removefromDeck(TrumpCard &card_)
 {
@@ -30,15 +30,19 @@ void TrumpCardContainer::removeLastCard()
 }
 void TrumpCardContainer::Afisare(std::ostream &os)
 {
-    for (unsigned int i = 0; i < cards.size(); i++)
-        std::cout << cards[i] << " (" << dynamic_cast<TrumpCard*>(cards[i])->getType() << ")";
-    std::cout << '\n';
+    std::for_each(cards.begin(), cards.end(), [&os](AnyCard* card)
+    {
+        os << card << " (" << dynamic_cast<TrumpCard*>(card)->getType() << ")";
+    });
+    os << '\n';
 }
 std::ostream &operator<<(std::ostream &os, const TrumpCardContainer &deck)
 {
-    for (unsigned int i = 0; i < deck.cards.size(); i++)
-        std::cout << *dynamic_cast<TrumpCard*>(deck.cards[i]) << " ";
-    std::cout << '\n';
+    std::for_each(deck.cards.begin(), deck.cards.end(), [&os](AnyCard* card)
+    {
+        os << *dynamic_cast<TrumpCard*>(card) << " ";
+    });
+    os << '\n';
     return os;
 }
 TrumpCardContainer::~TrumpCardContainer() = default;

@@ -8,6 +8,10 @@ ClassicDeck::ClassicDeck(ClassicDeck&& other) noexcept : ClassicCardContainer()
     cards = std::move(other.cards);
     other.cards.clear();
 }
+ClassicDeck* ClassicDeck::clone() const
+{
+    return new ClassicDeck(*this);
+}
 void ClassicDeck::createDeck()
 {
     for(int i = 0; i < 6; i++)
@@ -79,10 +83,10 @@ ClassicDeck &ClassicDeck::operator=(ClassicDeck&& other) noexcept
 {
     if (this != &other)
     {
-        for (auto& card : cards)
+        std::for_each(cards.begin(), cards.end(), [](AnyCard* card)
         {
             delete card;
-        }
+        });
         cards.clear();
         cards = std::move(other.cards);
         other.cards.clear();
@@ -91,8 +95,10 @@ ClassicDeck &ClassicDeck::operator=(ClassicDeck&& other) noexcept
 }
 void ClassicDeck::Afisare(std::ostream &os)
 {
-    for (unsigned int i = 0; i < cards.size(); i++)
-        std::cout << cards[i] << " ";
-    std::cout << '\n';
+    std::for_each(cards.begin(), cards.end(), [&os](AnyCard* card)
+    {
+        os << card << " ";
+    });
+    os << '\n';
 }
 ClassicDeck::~ClassicDeck() = default;

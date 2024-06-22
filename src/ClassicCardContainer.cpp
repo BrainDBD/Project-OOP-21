@@ -1,7 +1,6 @@
 #include "../include/ClassicCardContainer.h"
 
 ClassicCardContainer::ClassicCardContainer(const std::vector<AnyCard*> &cards_) : BasicCardContainer{cards_} {}
-
 int ClassicCardContainer::DeckSize()
 {
     int s = cards.size();
@@ -9,11 +8,11 @@ int ClassicCardContainer::DeckSize()
 }
 void ClassicCardContainer::emptyDeck()
 {
-    while (!cards.empty())
+    std::for_each(cards.begin(), cards.end(), [](AnyCard* card)
     {
-        ClassicCard dealtcard = *dynamic_cast<ClassicCard*>(cards.back());
-        cards.pop_back();
-    }
+        delete card;
+    });
+    cards.clear();
 }
 void ClassicCardContainer::removefromDeck(ClassicCard card_)
 {
@@ -33,9 +32,11 @@ void ClassicCardContainer::removeLastCard()
 }
 std::ostream &operator<<(std::ostream &os, const ClassicCardContainer &deck)
 {
-    for (unsigned int i = 0; i < deck.cards.size(); i++)
-        std::cout << *dynamic_cast<ClassicCard*>(deck.cards[i]) << " ";
-    std::cout << '\n';
+    std::for_each(deck.cards.begin(), deck.cards.end(), [&os](AnyCard* card)
+    {
+        os << *dynamic_cast<ClassicCard*>(card) << " ";
+    });
+    os << '\n';
     return os;
 }
 ClassicCardContainer::~ClassicCardContainer() = default;

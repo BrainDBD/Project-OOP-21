@@ -45,8 +45,10 @@ NumHand &NumHand::operator=(NumHand&& other) noexcept
 }
 void NumHand::Afisare(std::ostream &os)
 {
-    for (unsigned int i = 0; i < cards.size(); i++)
-        std::cout << cards[i] << " (" << dynamic_cast<NumCard *>(cards[i])->getValue() << ")";
+    std::for_each(cards.begin(), cards.end(), [](const AnyCard* card)
+    {
+        std::cout << card << " (" << dynamic_cast<const NumCard*>(card)->getValue() << ")";
+    });
     std::cout << '\n';
 }
 NumHand::~NumHand() = default;

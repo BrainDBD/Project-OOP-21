@@ -8,6 +8,10 @@ NumDeck::NumDeck(NumDeck&& other) noexcept : NumCardContainer()
     cards = std::move(other.cards);
     other.cards.clear();
 }
+NumDeck* NumDeck::clone() const
+{
+    return new NumDeck(*this);
+}
 void NumDeck::createDeck()
 {
     for (int type = static_cast<int>(NumType::One); type <= static_cast<int>(NumType::Eleven); ++type)
@@ -71,8 +75,10 @@ NumDeck &NumDeck::operator=(NumDeck&& other) noexcept
 }
 void NumDeck::Afisare(std::ostream &os)
 {
-    for (unsigned int i = 0; i < cards.size(); i++)
-        std::cout << cards[i] << " ";
+    std::for_each(cards.begin(), cards.end(), [](const AnyCard* card)
+    {
+        std::cout << card << " ";
+    });
     std::cout << '\n';
 }
 NumDeck::~NumDeck() = default;
