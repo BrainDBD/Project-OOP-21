@@ -109,7 +109,7 @@ void GameMaster::startNumGame()
         std::cout << "Player " << i << " what is your name?" << '\n';
         std::string nume;
         std::cin >> nume;
-        NumPlayer jucatornou{nume, 0, 0, newhand};
+        NumPlayer jucatornou = *PlayerMaker.createNPlayer(nume, 0, 0, newhand);
         jucatori.push_back(jucatornou);
     }    
     NumDeck newdeck;
@@ -167,7 +167,7 @@ void GameMaster::startClassicGame()
         std::cout << "Player " << i << " what is your name?" << '\n';
         std::string nume;
         std::cin >> nume;
-        ClassicPlayer jucatornou{nume, 0, 1000, 0, newhand, Role::None};
+        ClassicPlayer jucatornou = *PlayerMaker.createCPlayer(nume, 0, 1000, 0, newhand, Role::None);
         jucatori.push_back(jucatornou);
     }
     ClassicDeck newdeck;
@@ -222,7 +222,7 @@ void GameMaster::startTrumpGame()
         std::cout << "Player " << i << " what is your name?" << '\n';
         std::string nume;
         std::cin >> nume;
-        TrumpPlayer jucatornou{nume, 0, 0, newhand, newthand};
+        TrumpPlayer jucatornou = *PlayerMaker.createTPlayer(nume, 0, 0, newhand, newthand);
         jucatori.push_back(jucatornou);
     }
     NumDeck newdeck;

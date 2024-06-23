@@ -2,6 +2,7 @@
 #define CGAME_H
 
 #include "ClassicPlayer.h"
+#include "PlayerFactory.h"
 #include "ClassicDeck.h"
 #include "Exceptions.h"
 

@@ -1,4 +1,4 @@
-#ifndef TLAYER_H
+#ifndef TPLAYER_H
 #define TPLAYER_H
 
 #include <iostream>
@@ -6,7 +6,7 @@
 #include "NumHand.h"
 #include "TrumpHand.h"
 
-class TrumpPlayer : public StarterPlayer
+class TrumpPlayer : virtual public StarterPlayer
 {
 private:
     NumHand hand;

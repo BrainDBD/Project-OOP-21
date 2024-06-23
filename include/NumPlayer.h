@@ -5,7 +5,7 @@
 #include "StarterPlayer.h"
 #include "NumHand.h"
 
-class NumPlayer : public StarterPlayer
+class NumPlayer : virtual public StarterPlayer
 {
 private:
     NumHand hand;

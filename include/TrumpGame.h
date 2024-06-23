@@ -24,4 +24,4 @@ public:
     ~TrumpGame();
 };
 
-#endif  //CGAME_H
+#endif  //TGAME_H

@@ -25,11 +25,12 @@ bool ClassicGame::isGameOver(int targetscore)
 }
 void ClassicGame::assignDealer()
 {
+    PlayerFactory p;
     std::for_each(players.begin(), players.end(), [](ClassicPlayer& player)
     {
         player.setRole(Role::Player);
     });
-    ClassicPlayer dealer = {"Dealer", 0, 2000, 0, {}, Role::Dealer};
+    ClassicPlayer dealer = *p.createCPlayer("Dealer", 0, 2000, 0, {}, Role::Dealer);
     players.push_back(dealer);
 }
 void ClassicGame::DisplayScores()

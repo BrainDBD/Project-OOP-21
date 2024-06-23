@@ -7,7 +7,7 @@
 #include "./enums/Roles.h"
 #include "Exceptions.h"
 
-class ClassicPlayer : public StarterPlayer
+class ClassicPlayer : virtual public StarterPlayer
 {
 private:
     Role role;

@@ -10,6 +10,7 @@ class GameMaster
 {
 private:
     static GameMaster* instance;
+    PlayerFactory PlayerMaker;
     GameType currentGameType;
     void* activeGame;
     GameMaster();
